@@ -626,7 +626,7 @@ body.dark .focus-actions .start-button {
 }
 .map-train {
   filter: drop-shadow(0 5px 6px rgba(0, 0, 0, 0.32));
-  transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .map-train-icon {
   transform-origin: 0 0;
@@ -740,10 +740,6 @@ body.dark .focus-actions .start-button {
     transform 0.2s ease,
     opacity 0.2s ease;
 }
-.station-card.in-transit {
-  transform: translateY(7px) scale(0.985);
-  opacity: 0.9;
-}
 .station-meta {
   display: flex;
   justify-content: space-between;
@@ -839,12 +835,6 @@ body.dark .focus-actions .start-button {
 .typing-target .current {
   color: var(--active-route);
   border-bottom: 3px solid currentColor;
-}
-.typing-target .moving-copy {
-  color: var(--active-route);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
 }
 .line-strip {
   display: flex;

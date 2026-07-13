@@ -34,7 +34,7 @@ export function HomeScreen({
           一站一站，<em>越打越順。</em>
         </h1>
         <p className="lede">
-          在真實台灣地圖上選擇路線，沿著精確站點位置完成英文站名。每打完一站，列車就會往下一站前進。
+          在真實台灣地圖上選擇路線，沿著精確站點位置完成英文站名。每打對一個字，列車就會往下一站前進一段。
         </p>
         <div className="home-instruction">
           <b>01</b>

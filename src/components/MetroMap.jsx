@@ -5,18 +5,30 @@ export function MetroMap({
   selectedLine,
   stations,
   stationIndex,
-  trainIndex,
+  trainProgress,
 }) {
   const route = mapModel.routes.find((item) => item.id === selectedLine.id);
   const routeViewBox = getRouteViewBox(route, 44, 7);
   routeViewBox[1] += routeViewBox[3] * 0.16;
   const viewBox = routeViewBox.join(" ");
-  const train = route.pointsById.get(stations[trainIndex].stationId);
-  const nextIndex = (stationIndex + 1) % stations.length;
-  const progress = stations
-    .slice(0, trainIndex + 1)
+  const nextIndex =
+    stationIndex + 1 < stations.length ? stationIndex + 1 : null;
+  const currentPoint = route.pointsById.get(stations[stationIndex].stationId);
+  const nextPoint =
+    nextIndex === null
+      ? currentPoint
+      : route.pointsById.get(stations[nextIndex].stationId);
+  const journeyProgress =
+    nextIndex === null ? 0 : Math.min(Math.max(trainProgress, 0), 1);
+  const train = [
+    currentPoint[0] + (nextPoint[0] - currentPoint[0]) * journeyProgress,
+    currentPoint[1] + (nextPoint[1] - currentPoint[1]) * journeyProgress,
+  ];
+  const progressPoints = stations
+    .slice(0, stationIndex + 1)
     .map((station) => route.pointsById.get(station.stationId))
     .filter(Boolean);
+  if (journeyProgress > 0) progressPoints.push(train);
 
   return (
     <svg className="metro-map" viewBox={viewBox} aria-hidden="true">
@@ -52,7 +64,7 @@ export function MetroMap({
       ))}
       <polyline
         className="map-progress"
-        points={pointsToString(progress)}
+        points={pointsToString(progressPoints)}
         stroke={route.color}
       />
       {route.stations.map((station) => {

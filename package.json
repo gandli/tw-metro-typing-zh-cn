@@ -12,7 +12,7 @@
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
     "format": "prettier --write .",
-    "data:import": "node scripts/import-open-data.mjs",
+    "data:map": "node scripts/import-map-data.mjs",
     "data:tdx-files": "node scripts/import-tdx-files.mjs",
     "sync": "node scripts/sync-tdx.mjs"
   },

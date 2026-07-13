@@ -6,8 +6,7 @@ import path from "node:path";
 // so no TDX credentials are needed. Expected files per operator:
 //   data/<operator>-line.json             -> /v2/Rail/Metro/Line/<RailSystem>
 //   data/<operator>-station.json          -> /v2/Rail/Metro/Station/<RailSystem>
-//   data/<operator>-station-of-line.json  -> /v2/Rail/Metro/StationOfLine/<RailSystem> (optional)
-// Lines not covered by local files are preserved from the existing metro.json.
+//   data/<operator>-station-of-line.json  -> /v2/Rail/Metro/StationOfLine/<RailSystem>
 
 const OPERATOR_NAMES = {
   TRTC: "台北捷運",
@@ -21,6 +20,7 @@ const OPERATOR_NAMES = {
 };
 
 const LINE_ORDER = ["BR", "R", "G", "O", "BL", "Y", "A"];
+const REQUIRED_OPERATORS = ["trtc", "ntmc", "tymc"];
 
 const lineColors = {
   BR: "#c48c31",
@@ -74,9 +74,7 @@ function buildSegments(lineId, stationIds) {
   return [stationIds];
 }
 
-// Per-line ordering comes from the StationOfLine response when available.
-// Without it, station codes still encode the order: letters pick the line,
-// digits the position, and an "A" suffix marks branch stops (R22A, G03A).
+// Per-line ordering comes from the official StationOfLine response.
 function buildLines(operatorId, lineMetadata, stations, stationOfLine) {
   const details = new Map(
     stations.map((station) => [station.StationID, station]),
@@ -95,22 +93,9 @@ function buildLines(operatorId, lineMetadata, stations, stationOfLine) {
     ]),
   );
 
-  const byPrefix = new Map();
-  for (const station of stations) {
-    const prefix = String(station.StationID).match(/^[A-Z]+/i)?.[0] ?? "";
-    if (!byPrefix.has(prefix)) byPrefix.set(prefix, []);
-    byPrefix.get(prefix).push(station);
-  }
-
   return lineMetadata
     .map((line) => {
-      const members =
-        orderByLine.get(line.LineID) ??
-        (byPrefix.get(line.LineID) ?? []).sort(
-          (a, b) =>
-            stationNumber(a.StationID) - stationNumber(b.StationID) ||
-            String(a.StationID).localeCompare(b.StationID),
-        );
+      const members = orderByLine.get(line.LineID) ?? [];
       const suppliedColor = String(line.LineColor ?? "").replace(/^#/, "");
       return {
         id: `${operatorId}-${line.LineID}`,
@@ -155,57 +140,48 @@ const outputDir = path.resolve(here, "../public/data");
 const outputPath = path.join(outputDir, "metro.json");
 
 const files = await readdir(dataDir);
-const operators = [
-  ...new Set(
-    files
-      .map((file) => file.match(/^([a-z]+)-(?:line|station)\.json$/i)?.[1])
-      .filter(Boolean),
-  ),
-];
-if (!operators.length)
+const requiredFiles = REQUIRED_OPERATORS.flatMap((operator) => [
+  `${operator}-line.json`,
+  `${operator}-station.json`,
+  `${operator}-station-of-line.json`,
+]);
+const missingFiles = requiredFiles.filter((file) => !files.includes(file));
+if (missingFiles.length)
   throw new Error(
-    `No <operator>-line.json / <operator>-station.json pairs found in ${dataDir}.`,
+    `Missing required TDX data files: ${missingFiles.join(", ")}.`,
   );
 
 const readJson = async (file) =>
   JSON.parse(await readFile(path.join(dataDir, file), "utf8"));
 
 const built = [];
-for (const operator of operators) {
+for (const operator of REQUIRED_OPERATORS) {
   const operatorId = operator.toUpperCase();
-  const hasStationOfLine = files.includes(`${operator}-station-of-line.json`);
   const [lineMetadata, stations, stationOfLine] = await Promise.all([
     readJson(`${operator}-line.json`),
     readJson(`${operator}-station.json`),
-    hasStationOfLine ? readJson(`${operator}-station-of-line.json`) : null,
+    readJson(`${operator}-station-of-line.json`),
   ]);
   built.push(...buildLines(operatorId, lineMetadata, stations, stationOfLine));
   console.log(
-    `Built ${operatorId}: ${lineMetadata.length} lines, ${stations.length} stations` +
-      `${hasStationOfLine ? " (official station order)" : " (order derived from station codes)"}.`,
+    `Built ${operatorId}: ${lineMetadata.length} lines, ${stations.length} stations (official station order).`,
   );
 }
 
 const builtLineIds = new Set(built.map((line) => line.lineId));
-let preserved = [];
-try {
-  const existing = JSON.parse(await readFile(outputPath, "utf8"));
-  preserved = (existing.lines ?? []).filter(
-    (line) => !builtLineIds.has(line.lineId),
+const missingLines = LINE_ORDER.filter((lineId) => !builtLineIds.has(lineId));
+if (missingLines.length)
+  throw new Error(
+    `Missing required TDX metro lines: ${missingLines.join(", ")}.`,
   );
-  if (preserved.length)
-    console.log(
-      `Preserved from existing metro.json: ${preserved.map((line) => line.lineId).join(", ")}.`,
-    );
-} catch {
-  // No existing metro.json to merge; output only the locally built lines.
-}
 
 const order = (line) => {
   const index = LINE_ORDER.indexOf(line.lineId);
   return index === -1 ? LINE_ORDER.length : index;
 };
-const lines = [...built, ...preserved].sort((a, b) => order(a) - order(b));
+const lines = built
+  .filter((line) => LINE_ORDER.includes(line.lineId))
+  .sort((a, b) => order(a) - order(b));
 
 const output = {
   source: "TDX 運輸資料流通服務（本地 data/ 檔案匯入）",

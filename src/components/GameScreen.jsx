@@ -7,19 +7,20 @@ export function GameScreen({
   stations,
   mode,
   stationIndex,
-  trainIndex,
   typedIndex,
   completed,
   remaining,
   elapsed,
   metrics,
-  moving,
   shake,
   onBack,
   onFocusTyping,
 }) {
   const station = stations[stationIndex];
-  const next = stations[(stationIndex + 1) % stations.length];
+  const next = stations[stationIndex + 1] ?? null;
+  const trainProgress = station.target.length
+    ? typedIndex / station.target.length
+    : 0;
   return (
     <section className="game" style={{ "--active-route": line.color }}>
       <p className="screen-reader-status" aria-live="polite" aria-atomic="true">
@@ -30,7 +31,7 @@ export function GameScreen({
         selectedLine={line}
         stations={stations}
         stationIndex={stationIndex}
-        trainIndex={trainIndex}
+        trainProgress={trainProgress}
       />
       <div className="game-chrome">
         <button className="back-button" type="button" onClick={onBack}>
@@ -51,27 +52,26 @@ export function GameScreen({
         <Metric label="正確率" value={metrics.accuracy} unit="%" />
       </div>
       <article
-        className={`station-card${moving ? " in-transit" : ""}${shake ? " shake" : ""}`}
-        aria-busy={moving}
+        className={`station-card${shake ? " shake" : ""}`}
         onClick={onFocusTyping}
       >
         <div className="station-meta">
           <span>{String(stationIndex + 1).padStart(2, "0")}</span>
-          <span>
-            {moving ? `列車行駛中 · 前往 ${next.nameZh}` : station.address}
-          </span>
+          <span>{station.address}</span>
         </div>
         <div className="station-main">
           <div>
             <p>NOW ARRIVING</p>
             <h2>{station.nameZh}</h2>
           </div>
-          <div className="next-station">
-            <span>下一站</span>
-            <strong>{next.nameZh}</strong>
-            <b>
-              <ArrowRight size={22} />
-            </b>
+          <div className={`next-station${next ? "" : " is-terminal"}`}>
+            <span>{next ? "下一站" : "終點站"}</span>
+            <strong>{next?.nameZh ?? "本線終點"}</strong>
+            {next ? (
+              <b>
+                <ArrowRight size={22} />
+              </b>
+            ) : null}
           </div>
         </div>
         <div
@@ -81,24 +81,20 @@ export function GameScreen({
           }}
           aria-label={`請輸入 ${station.nameEn}`}
         >
-          {moving ? (
-            <span className="moving-copy">TRAIN IN MOTION</span>
-          ) : (
-            [...station.target].map((character, index) => (
-              <span
-                key={`${character}-${index}`}
-                className={
-                  index < typedIndex
-                    ? "typed"
-                    : index === typedIndex
-                      ? "current"
-                      : ""
-                }
-              >
-                {character === " " ? "\u00A0" : character}
-              </span>
-            ))
-          )}
+          {[...station.target].map((character, index) => (
+            <span
+              key={`${character}-${index}`}
+              className={
+                index < typedIndex
+                  ? "typed"
+                  : index === typedIndex
+                    ? "current"
+                    : ""
+              }
+            >
+              {character === " " ? "\u00A0" : character}
+            </span>
+          ))}
         </div>
         <div className="line-strip">
           <i />

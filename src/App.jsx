@@ -20,21 +20,18 @@ export default function App() {
   const [mode, setMode] = useState("timed");
   const [dark, setDark] = useState(false);
   const [stationIndex, setStationIndex] = useState(0);
-  const [trainIndex, setTrainIndex] = useState(0);
   const [typedIndex, setTypedIndex] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [errors, setErrors] = useState(0);
   const [completed, setCompleted] = useState(0);
   const [elapsedMs, setElapsedMs] = useState(0);
-  const [moving, setMoving] = useState(false);
   const [shake, setShake] = useState(false);
-  const moveTimerRef = useRef(null);
   const startTimeRef = useRef(0);
   const typingInputRef = useRef(null);
-  // Typing progress advances faster than React re-renders during fast bursts,
-  // so the keydown handler tracks position/motion synchronously via refs.
+  // Typing progress can advance faster than React re-renders during fast bursts,
+  // so input position and the active station are also tracked synchronously.
   const typedIndexRef = useRef(0);
-  const movingRef = useRef(false);
+  const stationIndexRef = useRef(0);
 
   const selectedLine =
     data?.lines.find((line) => line.id === selectedLineId) ?? null;
@@ -56,31 +53,23 @@ export default function App() {
     document.body.classList.toggle("dark", dark);
   }, [dark]);
 
-  useEffect(() => () => clearTimeout(moveTimerRef.current), []);
-
   const startGame = useCallback(() => {
     if (!selectedLine) return;
     typingInputRef.current?.focus({ preventScroll: true });
-    clearTimeout(moveTimerRef.current);
     typedIndexRef.current = 0;
-    movingRef.current = false;
+    stationIndexRef.current = 0;
     setStationIndex(0);
-    setTrainIndex(0);
     setTypedIndex(0);
     setCorrect(0);
     setErrors(0);
     setCompleted(0);
     setElapsedMs(0);
     startTimeRef.current = performance.now();
-    setMoving(false);
     setScreen("game");
   }, [selectedLine]);
 
   const backToHome = useCallback(() => {
     typingInputRef.current?.blur();
-    clearTimeout(moveTimerRef.current);
-    movingRef.current = false;
-    setMoving(false);
     setSelectedLineId(null);
     setRunIndex(0);
     setScreen("home");
@@ -93,11 +82,9 @@ export default function App() {
 
   const finishGame = useCallback(() => {
     typingInputRef.current?.blur();
-    clearTimeout(moveTimerRef.current);
     // Capture the exact finish time instead of the last whole-second tick.
     const ms = performance.now() - startTimeRef.current;
     setElapsedMs(mode === "timed" ? Math.min(ms, TIMED_MS) : ms);
-    setMoving(false);
     setScreen("result");
   }, [mode]);
 
@@ -116,29 +103,23 @@ export default function App() {
   }, [elapsedMs, finishGame, mode, screen]);
 
   const advanceStation = useCallback(() => {
-    movingRef.current = true;
+    const currentIndex = stationIndexRef.current;
     setCompleted((value) => value + 1);
-    if (mode === "line" && stationIndex >= stations.length - 1) {
+    if (mode === "line" && currentIndex >= stations.length - 1) {
       finishGame();
       return;
     }
-    const nextIndex = (stationIndex + 1) % stations.length;
-    setMoving(true);
-    setTrainIndex(nextIndex);
-    moveTimerRef.current = setTimeout(() => {
-      typedIndexRef.current = 0;
-      movingRef.current = false;
-      setStationIndex(nextIndex);
-      setTypedIndex(0);
-      setMoving(false);
-    }, 550);
-  }, [finishGame, mode, stationIndex, stations.length]);
+    const nextIndex = (currentIndex + 1) % stations.length;
+    typedIndexRef.current = 0;
+    stationIndexRef.current = nextIndex;
+    setStationIndex(nextIndex);
+    setTypedIndex(0);
+  }, [finishGame, mode, stations.length]);
 
   const typeCharacter = useCallback(
     (character) => {
-      if (screen !== "game" || movingRef.current || character.length !== 1)
-        return;
-      const station = stations[stationIndex];
+      if (screen !== "game" || character.length !== 1) return;
+      const station = stations[stationIndexRef.current];
       if (!station) return;
       const expected = station.target[typedIndexRef.current];
       const typed = character.toLowerCase();
@@ -154,7 +135,7 @@ export default function App() {
         setTimeout(() => setShake(false), 170);
       }
     },
-    [advanceStation, screen, stationIndex, stations],
+    [advanceStation, screen, stations],
   );
 
   const handleTypingInput = useCallback(
@@ -179,8 +160,6 @@ export default function App() {
       if (
         screen !== "game" ||
         event.target === typingInputRef.current ||
-        moving ||
-        movingRef.current ||
         event.repeat ||
         event.metaKey ||
         event.ctrlKey ||
@@ -199,7 +178,6 @@ export default function App() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [
     backToHome,
-    moving,
     screen,
     selectedLineId,
     stationIndex,
@@ -281,13 +259,11 @@ export default function App() {
             stations={stations}
             mode={mode}
             stationIndex={stationIndex}
-            trainIndex={trainIndex}
             typedIndex={typedIndex}
             completed={completed}
             remaining={remaining}
             elapsed={elapsed}
             metrics={metrics}
-            moving={moving}
             shake={shake}
             onBack={backToHome}
             onFocusTyping={() =>

@@ -342,6 +342,14 @@ export default function App() {
               <a href="https://yencheng.dev" target="_blank" rel="noreferrer">
                 Yen Cheng
               </a>
+              <span className="footer-sep">·</span>
+              <a
+                href="https://github.com/ridemountainpig/tw-metro-typing"
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub
+              </a>
             </p>
           </div>
         </footer>

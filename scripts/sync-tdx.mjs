@@ -11,6 +11,9 @@ const OPERATORS = [
   { id: "NTMC", name: "新北捷運" },
   { id: "NTDLRT", name: "淡海輕軌" },
   { id: "NTALRT", name: "安坑輕軌" },
+  { id: "TMRT", name: "台中捷運" },
+  { id: "KRTC", name: "高雄捷運" },
+  { id: "KLRT", name: "高雄輕軌" },
 ];
 
 const lineColors = {
@@ -24,6 +27,7 @@ const lineColors = {
   V: "#e86c8d",
   K: "#67a848",
   LB: "#6cb7d8",
+  C: "#78b82a",
 };
 
 function text(value) {
@@ -36,7 +40,7 @@ function target(value) {
   return value
     .normalize("NFKD")
     .replace(/[’']/g, "")
-    .replace(/[-–—/]/g, " ")
+    .replace(/[-–—/().]/g, " ")
     .replace(/[^a-zA-Z0-9 ]/g, "")
     .replace(/\s+/g, " ")
     .trim()
@@ -47,12 +51,12 @@ function stationNumber(id) {
   return Number(String(id).match(/\d+/)?.[0] ?? 0);
 }
 
-function buildSegments(lineId, stationIds) {
-  if (lineId === "R")
+function buildSegments(operatorId, lineId, stationIds) {
+  if (operatorId === "TRTC" && lineId === "R")
     return [stationIds.filter((id) => id !== "R22A"), ["R22", "R22A"]];
-  if (lineId === "G")
+  if (operatorId === "TRTC" && lineId === "G")
     return [stationIds.filter((id) => id !== "G03A"), ["G03", "G03A"]];
-  if (lineId === "O") {
+  if (operatorId === "TRTC" && lineId === "O") {
     const trunk = stationIds.filter((id) => stationNumber(id) <= 21);
     return [
       trunk,
@@ -63,6 +67,12 @@ function buildSegments(lineId, stationIds) {
     ];
   }
   return [stationIds];
+}
+
+function buildMapSegments(operatorId, lineId, stationIds, segments) {
+  if (operatorId === "KLRT" && lineId === "C" && stationIds.length > 1)
+    return [[...stationIds, stationIds[0]]];
+  return segments;
 }
 
 let accessToken = null;
@@ -167,8 +177,19 @@ const lines = results
   })
   .map((line) => {
     const stationIds = line.stations.map((station) => station.stationId);
-    const segments = buildSegments(line.lineId, stationIds);
-    return { ...line, segments, gameStationIds: segments[0] };
+    const segments = buildSegments(line.operatorId, line.lineId, stationIds);
+    const mapSegments = buildMapSegments(
+      line.operatorId,
+      line.lineId,
+      stationIds,
+      segments,
+    );
+    return {
+      ...line,
+      segments,
+      ...(mapSegments === segments ? {} : { mapSegments }),
+      gameStationIds: segments[0],
+    };
   });
 
 if (!lines.length)

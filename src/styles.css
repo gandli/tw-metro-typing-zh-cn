@@ -388,16 +388,22 @@ kbd {
 }
 .route-carousel {
   display: flex;
-  justify-content: center;
   gap: 9px;
   padding: 12px;
   overflow-x: auto;
   scrollbar-width: none;
 }
+.route-button:first-child {
+  margin-left: auto;
+}
+.route-button:last-child {
+  margin-right: auto;
+}
 .route-carousel::-webkit-scrollbar {
   display: none;
 }
 .route-button {
+  flex: 0 0 auto;
   min-height: 58px;
   min-width: 142px;
   display: flex;
@@ -435,6 +441,7 @@ kbd {
 }
 .route-button strong {
   font-size: 13px;
+  white-space: nowrap;
 }
 .route-button small {
   margin-top: 2px;
@@ -741,8 +748,8 @@ body.dark .focus-actions .start-button {
     opacity 0.2s ease;
 }
 .station-meta {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: center;
   gap: 20px;
   padding: 8px 24px 0;
@@ -756,8 +763,9 @@ body.dark .focus-actions .start-button {
   font-weight: 700;
 }
 .station-meta span:last-child {
-  max-width: 70%;
+  min-width: 0;
   overflow: hidden;
+  text-align: right;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -1135,6 +1143,12 @@ body.dark .secondary-button {
   }
   .route-carousel {
     justify-content: flex-start;
+  }
+  .route-button:first-child {
+    margin-left: 0;
+  }
+  .route-button:last-child {
+    margin-right: 0;
   }
 }
 

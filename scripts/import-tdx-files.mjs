@@ -19,8 +19,20 @@ const OPERATOR_NAMES = {
   TMRT: "台中捷運",
 };
 
-const LINE_ORDER = ["BR", "R", "G", "O", "BL", "Y", "A"];
-const REQUIRED_OPERATORS = ["trtc", "ntmc", "tymc"];
+const LINE_ORDER = [
+  "TRTC-BR",
+  "TRTC-R",
+  "TRTC-G",
+  "TRTC-O",
+  "TRTC-BL",
+  "NTMC-Y",
+  "TYMC-A",
+  "TMRT-G",
+  "KRTC-R",
+  "KRTC-O",
+  "KLRT-C",
+];
+const REQUIRED_OPERATORS = ["trtc", "ntmc", "tymc", "tmrt", "krtc", "klrt"];
 
 const lineColors = {
   BR: "#c48c31",
@@ -33,6 +45,7 @@ const lineColors = {
   V: "#e86c8d",
   K: "#67a848",
   LB: "#6cb7d8",
+  C: "#78b82a",
 };
 
 function text(value) {
@@ -45,7 +58,7 @@ function target(value) {
   return value
     .normalize("NFKD")
     .replace(/[’']/g, "")
-    .replace(/[-–—/]/g, " ")
+    .replace(/[-–—/().]/g, " ")
     .replace(/[^a-zA-Z0-9 ]/g, "")
     .replace(/\s+/g, " ")
     .trim()
@@ -56,12 +69,12 @@ function stationNumber(id) {
   return Number(String(id).match(/\d+/)?.[0] ?? 0);
 }
 
-function buildSegments(lineId, stationIds) {
-  if (lineId === "R")
+function buildSegments(operatorId, lineId, stationIds) {
+  if (operatorId === "TRTC" && lineId === "R")
     return [stationIds.filter((id) => id !== "R22A"), ["R22", "R22A"]];
-  if (lineId === "G")
+  if (operatorId === "TRTC" && lineId === "G")
     return [stationIds.filter((id) => id !== "G03A"), ["G03", "G03A"]];
-  if (lineId === "O") {
+  if (operatorId === "TRTC" && lineId === "O") {
     const trunk = stationIds.filter((id) => stationNumber(id) <= 21);
     return [
       trunk,
@@ -72,6 +85,12 @@ function buildSegments(lineId, stationIds) {
     ];
   }
   return [stationIds];
+}
+
+function buildMapSegments(operatorId, lineId, stationIds, segments) {
+  if (operatorId === "KLRT" && lineId === "C" && stationIds.length > 1)
+    return [[...stationIds, stationIds[0]]];
+  return segments;
 }
 
 // Per-line ordering comes from the official StationOfLine response.
@@ -129,8 +148,19 @@ function buildLines(operatorId, lineMetadata, stations, stationOfLine) {
     .filter((line) => line.stations.length > 1)
     .map((line) => {
       const stationIds = line.stations.map((station) => station.stationId);
-      const segments = buildSegments(line.lineId, stationIds);
-      return { ...line, segments, gameStationIds: segments[0] };
+      const segments = buildSegments(operatorId, line.lineId, stationIds);
+      const mapSegments = buildMapSegments(
+        operatorId,
+        line.lineId,
+        stationIds,
+        segments,
+      );
+      return {
+        ...line,
+        segments,
+        ...(mapSegments === segments ? {} : { mapSegments }),
+        gameStationIds: segments[0],
+      };
     });
 }
 
@@ -168,7 +198,7 @@ for (const operator of REQUIRED_OPERATORS) {
   );
 }
 
-const builtLineIds = new Set(built.map((line) => line.lineId));
+const builtLineIds = new Set(built.map((line) => line.id));
 const missingLines = LINE_ORDER.filter((lineId) => !builtLineIds.has(lineId));
 if (missingLines.length)
   throw new Error(
@@ -176,11 +206,11 @@ if (missingLines.length)
   );
 
 const order = (line) => {
-  const index = LINE_ORDER.indexOf(line.lineId);
+  const index = LINE_ORDER.indexOf(line.id);
   return index === -1 ? LINE_ORDER.length : index;
 };
 const lines = built
-  .filter((line) => LINE_ORDER.includes(line.lineId))
+  .filter((line) => LINE_ORDER.includes(line.id))
   .sort((a, b) => order(a) - order(b));
 
 const output = {
@@ -195,7 +225,9 @@ await mkdir(outputDir, { recursive: true });
 await writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`);
 
 const stationCount = new Set(
-  lines.flatMap((line) => line.stations.map((station) => station.stationId)),
+  lines.flatMap((line) =>
+    line.stations.map((station) => `${line.operatorId}-${station.stationId}`),
+  ),
 ).size;
 console.log(
   `Wrote ${lines.length} lines and ${stationCount} unique stations to public/data/metro.json.`,

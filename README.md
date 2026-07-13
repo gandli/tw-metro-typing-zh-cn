@@ -7,7 +7,7 @@
 ## 功能
 
 - 真實台灣海岸與縣市邊界
-- 台北、新北與桃園捷運共 7 條路線、157 筆站點座標
+- 台北、新北、桃園、台中與高雄捷運及輕軌共 11 條路線、252 筆站點座標
 - 依真實站序與經緯度繪製路線，支線以獨立 segment 呈現
 - 選線放大、30 秒快打、全線挑戰
 - WPM、正確率、完成站數與列車移動回饋
@@ -53,6 +53,6 @@ pnpm data:map
 pnpm data:tdx-files
 ```
 
-檔名格式為 `<operator>-line.json`、`<operator>-station.json` 與 `<operator>-station-of-line.json`，例如 `trtc-line.json`。目前需包含 TRTC、NTMC 與 TYMC 三個營運單位的完整資料；缺少檔案或必要路線時，匯入會直接失敗。
+檔名格式為 `<operator>-line.json`、`<operator>-station.json` 與 `<operator>-station-of-line.json`，例如 `trtc-line.json`。目前需包含 TRTC、NTMC、TYMC、TMRT、KRTC 與 KLRT 六個營運單位的完整資料；缺少檔案或必要路線時，匯入會直接失敗。
 
 本專案不是捷運公司的官方服務，僅供打字練習使用。

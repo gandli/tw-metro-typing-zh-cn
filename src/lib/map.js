@@ -47,6 +47,7 @@ export function buildMapModel(topology, lines) {
       ]),
     );
     const segments = (
+      line.mapSegments ??
       line.segments ?? [line.stations.map((station) => station.stationId)]
     )
       .map((stationIds) =>

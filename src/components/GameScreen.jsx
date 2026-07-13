@@ -57,7 +57,7 @@ export function GameScreen({
       >
         <div className="station-meta">
           <span>{String(stationIndex + 1).padStart(2, "0")}</span>
-          <span>{station.address}</span>
+          <span title={station.address}>{station.address}</span>
         </div>
         <div className="station-main">
           <div>

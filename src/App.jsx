@@ -4,7 +4,11 @@ import { GameScreen } from "./components/GameScreen";
 import { HomeScreen } from "./components/HomeScreen";
 import { ResultScreen } from "./components/ResultScreen";
 import { useMapData } from "./hooks/useMapData";
-import { buildMapModel, getPlayableStations } from "./lib/map";
+import {
+  buildMapModel,
+  getPlayableStations,
+  ROUTE_DIRECTIONS,
+} from "./lib/map";
 import {
   getTypingTarget,
   isTypingCharacterMatch,
@@ -23,6 +27,7 @@ export default function App() {
   const [screen, setScreen] = useState("home");
   const [selectedLineId, setSelectedLineId] = useState(null);
   const [runIndex, setRunIndex] = useState(0);
+  const [direction, setDirection] = useState(ROUTE_DIRECTIONS.FORWARD);
   const [mode, setMode] = useState("timed");
   const [typingLanguage, setTypingLanguage] = useState(
     TYPING_LANGUAGES.ENGLISH,
@@ -48,8 +53,8 @@ export default function App() {
   const selectedLine =
     data?.lines.find((line) => line.id === selectedLineId) ?? null;
   const stations = useMemo(
-    () => getPlayableStations(selectedLine, runIndex),
-    [selectedLine, runIndex],
+    () => getPlayableStations(selectedLine, runIndex, direction),
+    [direction, selectedLine, runIndex],
   );
   const attempts = correct + errors;
   const elapsed = Math.floor(elapsedMs / 1000);
@@ -99,6 +104,7 @@ export default function App() {
     typingInputRef.current?.blur();
     setSelectedLineId(null);
     setRunIndex(0);
+    setDirection(ROUTE_DIRECTIONS.FORWARD);
     setScreen("home");
   }, [resetTypingInput]);
 
@@ -106,6 +112,18 @@ export default function App() {
     window.scrollTo({ top: 0 });
     setSelectedLineId(lineId);
     setRunIndex(0);
+    setDirection(ROUTE_DIRECTIONS.FORWARD);
+  }, []);
+
+  const selectRun = useCallback((index) => {
+    setRunIndex(index);
+    setDirection(ROUTE_DIRECTIONS.FORWARD);
+  }, []);
+
+  const resetLineSelection = useCallback(() => {
+    setSelectedLineId(null);
+    setRunIndex(0);
+    setDirection(ROUTE_DIRECTIONS.FORWARD);
   }, []);
 
   const finishGame = useCallback(() => {
@@ -219,8 +237,7 @@ export default function App() {
       if (event.key === "Escape") {
         if (screen === "game") backToHome();
         else if (screen === "home" && selectedLineId) {
-          setSelectedLineId(null);
-          setRunIndex(0);
+          resetLineSelection();
         }
         return;
       }
@@ -247,6 +264,7 @@ export default function App() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [
     backToHome,
+    resetLineSelection,
     screen,
     selectedLineId,
     stationIndex,
@@ -317,16 +335,15 @@ export default function App() {
             mapModel={mapModel}
             selectedLine={selectedLine}
             runIndex={runIndex}
-            onRunChange={setRunIndex}
+            onRunChange={selectRun}
+            direction={direction}
+            onDirectionChange={setDirection}
             mode={mode}
             onModeChange={setMode}
             typingLanguage={typingLanguage}
             onTypingLanguageChange={setTypingLanguage}
             onSelect={selectLine}
-            onReset={() => {
-              setSelectedLineId(null);
-              setRunIndex(0);
-            }}
+            onReset={resetLineSelection}
             onStart={startGame}
           />
         ) : null}

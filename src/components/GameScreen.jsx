@@ -44,7 +44,7 @@ export function GameScreen({
           <ArrowLeft size={15} /> 返回選線 <kbd>ESC</kbd>
         </button>
         <div className="route-pill" style={{ background: line.color }}>
-          {line.operatorName} · {line.lineName}
+          {line.lineName} · 往 {stations[stations.length - 1]?.nameZh}
         </div>
       </div>
       <div className="scorebar">

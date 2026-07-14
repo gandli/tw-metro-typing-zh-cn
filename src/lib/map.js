@@ -2,6 +2,10 @@ import { geoMercator, geoPath } from "d3-geo";
 import { feature } from "topojson-client";
 
 export const MAP_VIEWBOX = [200, 24, 640, 712];
+export const ROUTE_DIRECTIONS = {
+  FORWARD: "forward",
+  REVERSE: "reverse",
+};
 const OFFSHORE_COUNTIES = new Set(["09007", "09020", "10016"]);
 // Fit the projection to Taiwan proper; remote islets (e.g. 釣魚台) would otherwise shrink the main island.
 const TAIWAN_MAIN_BOUNDS = {
@@ -109,7 +113,14 @@ export function getLineRuns(line) {
     .filter((run) => run.stations.length > 1);
 }
 
-export function getPlayableStations(line, runIndex = 0) {
+export function getPlayableStations(
+  line,
+  runIndex = 0,
+  direction = ROUTE_DIRECTIONS.FORWARD,
+) {
   const runs = getLineRuns(line);
-  return (runs[runIndex] ?? runs[0])?.stations ?? [];
+  const stations = (runs[runIndex] ?? runs[0])?.stations ?? [];
+  return direction === ROUTE_DIRECTIONS.REVERSE
+    ? [...stations].reverse()
+    : stations;
 }

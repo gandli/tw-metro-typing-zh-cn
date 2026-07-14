@@ -1,6 +1,6 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { TaiwanMap } from "./TaiwanMap";
-import { getLineRuns, getPlayableStations } from "../lib/map";
+import { getLineRuns, getPlayableStations, ROUTE_DIRECTIONS } from "../lib/map";
 
 export function HomeScreen({
   data,
@@ -8,6 +8,8 @@ export function HomeScreen({
   selectedLine,
   runIndex,
   onRunChange,
+  direction,
+  onDirectionChange,
   mode,
   onModeChange,
   typingLanguage,
@@ -17,6 +19,12 @@ export function HomeScreen({
   onStart,
 }) {
   const runs = getLineRuns(selectedLine);
+  const selectedRun = runs[runIndex] ?? runs[0] ?? null;
+  const playableStations = getPlayableStations(
+    selectedLine,
+    runIndex,
+    direction,
+  );
   return (
     <section className={`home-map-screen${selectedLine ? " focused" : ""}`}>
       <TaiwanMap
@@ -66,8 +74,7 @@ export function HomeScreen({
               <div>
                 <h2>{selectedLine.lineName}</h2>
                 <p>
-                  {selectedLine.operatorName} ·{" "}
-                  {getPlayableStations(selectedLine, runIndex).length} 站
+                  {selectedLine.operatorName} · {playableStations.length} 站
                 </p>
               </div>
             </div>
@@ -126,6 +133,13 @@ export function HomeScreen({
                 </div>
               </div>
             ) : null}
+            {selectedRun ? (
+              <DirectionPicker
+                stations={selectedRun.stations}
+                value={direction}
+                onChange={onDirectionChange}
+              />
+            ) : null}
             <div className="option-toolbar">
               <SegmentedControl
                 label="站名"
@@ -152,6 +166,52 @@ export function HomeScreen({
         ) : null}
       </div>
     </section>
+  );
+}
+
+function DirectionPicker({ stations, value, onChange }) {
+  const firstStation = stations[0];
+  const lastStation = stations[stations.length - 1];
+  const options = [
+    {
+      value: ROUTE_DIRECTIONS.FORWARD,
+      origin: firstStation,
+      destination: lastStation,
+    },
+    {
+      value: ROUTE_DIRECTIONS.REVERSE,
+      origin: lastStation,
+      destination: firstStation,
+    },
+  ];
+
+  return (
+    <div className="direction-picker" role="radiogroup" aria-label="行駛方向">
+      <span className="control-label">方向</span>
+      <div className="direction-options">
+        {options.map((option) => (
+          <label
+            key={option.value}
+            className={`direction-option${value === option.value ? " selected" : ""}`}
+          >
+            <input
+              type="radio"
+              name="direction"
+              value={option.value}
+              checked={value === option.value}
+              onChange={() => onChange(option.value)}
+            />
+            <span>
+              <small>從 {option.origin.nameZh}</small>
+              <b>
+                往 {option.destination.nameZh}
+                <ArrowRight size={14} aria-hidden="true" />
+              </b>
+            </span>
+          </label>
+        ))}
+      </div>
+    </div>
   );
 }
 

@@ -12,8 +12,8 @@ const OPERATOR_NAMES = {
   TRTC: "台北捷運",
   TYMC: "桃園捷運",
   NTMC: "新北捷運",
-  NTDLRT: "淡海輕軌",
-  NTALRT: "安坑輕軌",
+  NTDLRT: "新北捷運",
+  NTALRT: "新北捷運",
   KRTC: "高雄捷運",
   KLRT: "高雄輕軌",
   TMRT: "台中捷運",
@@ -26,13 +26,24 @@ const LINE_ORDER = [
   "TRTC-O",
   "TRTC-BL",
   "NTMC-Y",
+  "NTDLRT-V",
+  "NTALRT-K",
   "TYMC-A",
   "TMRT-G",
   "KRTC-R",
   "KRTC-O",
   "KLRT-C",
 ];
-const REQUIRED_OPERATORS = ["trtc", "ntmc", "tymc", "tmrt", "krtc", "klrt"];
+const REQUIRED_OPERATORS = [
+  "trtc",
+  "ntmc",
+  "ntdlrt",
+  "ntalrt",
+  "tymc",
+  "tmrt",
+  "krtc",
+  "klrt",
+];
 
 const lineColors = {
   BR: "#c48c31",
@@ -82,6 +93,18 @@ function buildSegments(operatorId, lineId, stationIds) {
         ...trunk.filter((id) => stationNumber(id) <= 12),
         ...stationIds.filter((id) => stationNumber(id) >= 50),
       ],
+    ];
+  }
+  if (operatorId === "NTDLRT" && lineId === "V") {
+    const shared = stationIds.filter((id) => stationNumber(id) <= 9);
+    const kandingBranch = stationIds.filter((id) => {
+      const number = stationNumber(id);
+      return number >= 10 && number <= 11;
+    });
+    const wharfBranch = stationIds.filter((id) => stationNumber(id) >= 26);
+    return [
+      [...shared, ...kandingBranch],
+      [...shared, ...wharfBranch],
     ];
   }
   return [stationIds];

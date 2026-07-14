@@ -9,8 +9,8 @@ const OPERATORS = [
   { id: "TRTC", name: "台北捷運" },
   { id: "TYMC", name: "桃園捷運" },
   { id: "NTMC", name: "新北捷運" },
-  { id: "NTDLRT", name: "淡海輕軌" },
-  { id: "NTALRT", name: "安坑輕軌" },
+  { id: "NTDLRT", name: "新北捷運" },
+  { id: "NTALRT", name: "新北捷運" },
   { id: "TMRT", name: "台中捷運" },
   { id: "KRTC", name: "高雄捷運" },
   { id: "KLRT", name: "高雄輕軌" },
@@ -64,6 +64,18 @@ function buildSegments(operatorId, lineId, stationIds) {
         ...trunk.filter((id) => stationNumber(id) <= 12),
         ...stationIds.filter((id) => stationNumber(id) >= 50),
       ],
+    ];
+  }
+  if (operatorId === "NTDLRT" && lineId === "V") {
+    const shared = stationIds.filter((id) => stationNumber(id) <= 9);
+    const kandingBranch = stationIds.filter((id) => {
+      const number = stationNumber(id);
+      return number >= 10 && number <= 11;
+    });
+    const wharfBranch = stationIds.filter((id) => stationNumber(id) >= 26);
+    return [
+      [...shared, ...kandingBranch],
+      [...shared, ...wharfBranch],
     ];
   }
   return [stationIds];

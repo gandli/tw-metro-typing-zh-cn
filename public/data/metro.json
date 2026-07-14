@@ -2,7 +2,7 @@
   "source": "TDX 運輸資料流通服務（本地 data/ 檔案匯入）",
   "sourceUrl": "https://tdx.transportdata.tw/",
   "license": "政府資料開放授權條款第 1 版",
-  "generatedAt": "2026-07-13T07:15:43.897Z",
+  "generatedAt": "2026-07-14T10:59:15.933Z",
   "lines": [
     {
       "id": "TRTC-BR",
@@ -1866,6 +1866,337 @@
         "Y18",
         "Y19",
         "Y20"
+      ]
+    },
+    {
+      "id": "NTDLRT-V",
+      "operatorId": "NTDLRT",
+      "operatorName": "新北捷運",
+      "lineId": "V",
+      "lineName": "淡海輕軌",
+      "color": "#FF2A00",
+      "updatedAt": "2020-12-30T00:00:00+08:00",
+      "stations": [
+        {
+          "id": "V01",
+          "stationId": "V01",
+          "sequence": 1,
+          "nameZh": "紅樹林",
+          "nameEn": "Hongshulin",
+          "target": "hongshulin",
+          "address": "新北市淡水區中正東路二段68號(輕軌紅樹林站)",
+          "lat": 25.155597,
+          "lon": 121.458851
+        },
+        {
+          "id": "V02",
+          "stationId": "V02",
+          "sequence": 2,
+          "nameZh": "竿蓁林",
+          "nameEn": "Ganzhenlin",
+          "target": "ganzhenlin",
+          "address": "",
+          "lat": 25.162415,
+          "lon": 121.456232
+        },
+        {
+          "id": "V03",
+          "stationId": "V03",
+          "sequence": 3,
+          "nameZh": "淡金鄧公",
+          "nameEn": "Danjin Denggong",
+          "target": "danjin denggong",
+          "address": "",
+          "lat": 25.169363,
+          "lon": 121.460813
+        },
+        {
+          "id": "V04",
+          "stationId": "V04",
+          "sequence": 4,
+          "nameZh": "淡江大學",
+          "nameEn": "Tamkang University",
+          "target": "tamkang university",
+          "address": "",
+          "lat": 25.176959,
+          "lon": 121.456082
+        },
+        {
+          "id": "V05",
+          "stationId": "V05",
+          "sequence": 5,
+          "nameZh": "淡金北新",
+          "nameEn": "Danjin Beixin",
+          "target": "danjin beixin",
+          "address": "",
+          "lat": 25.181131,
+          "lon": 121.452366
+        },
+        {
+          "id": "V06",
+          "stationId": "V06",
+          "sequence": 6,
+          "nameZh": "新市一路",
+          "nameEn": "Xinshi 1st Rd.",
+          "target": "xinshi 1st rd",
+          "address": "",
+          "lat": 25.183817,
+          "lon": 121.448258
+        },
+        {
+          "id": "V07",
+          "stationId": "V07",
+          "sequence": 7,
+          "nameZh": "淡水行政中心",
+          "nameEn": "Tamsui District Office",
+          "target": "tamsui district office",
+          "address": "",
+          "lat": 25.189017,
+          "lon": 121.444482
+        },
+        {
+          "id": "V08",
+          "stationId": "V08",
+          "sequence": 8,
+          "nameZh": "濱海義山",
+          "nameEn": "Binhai Yishan",
+          "target": "binhai yishan",
+          "address": "",
+          "lat": 25.18977,
+          "lon": 121.43738
+        },
+        {
+          "id": "V09",
+          "stationId": "V09",
+          "sequence": 9,
+          "nameZh": "濱海沙崙",
+          "nameEn": "Binhai Shalun",
+          "target": "binhai shalun",
+          "address": "",
+          "lat": 25.190501,
+          "lon": 121.431589
+        },
+        {
+          "id": "V10",
+          "stationId": "V10",
+          "sequence": 10,
+          "nameZh": "淡海新市鎮",
+          "nameEn": "Danhai New Town",
+          "target": "danhai new town",
+          "address": "",
+          "lat": 25.195691,
+          "lon": 121.432471
+        },
+        {
+          "id": "V11",
+          "stationId": "V11",
+          "sequence": 11,
+          "nameZh": "崁頂",
+          "nameEn": "Kanding",
+          "target": "kanding",
+          "address": "",
+          "lat": 25.200994,
+          "lon": 121.434651
+        },
+        {
+          "id": "V28",
+          "stationId": "V28",
+          "sequence": 12,
+          "nameZh": "台北海洋大學",
+          "nameEn": "Taipei University of Marine Technology",
+          "target": "taipei university of marine technology",
+          "address": "",
+          "lat": 25.191141,
+          "lon": 121.426365
+        },
+        {
+          "id": "V27",
+          "stationId": "V27",
+          "sequence": 13,
+          "nameZh": "沙崙",
+          "nameEn": "Shalun",
+          "target": "shalun",
+          "address": "",
+          "lat": 25.187536,
+          "lon": 121.417331
+        },
+        {
+          "id": "V26",
+          "stationId": "V26",
+          "sequence": 14,
+          "nameZh": "淡水漁人碼頭",
+          "nameEn": "Tamsui Fisherman's Wharf",
+          "target": "tamsui fishermans wharf",
+          "address": "新北市淡水區中正路二段51巷",
+          "lat": 25.182005,
+          "lon": 121.418605
+        }
+      ],
+      "segments": [
+        [
+          "V01",
+          "V02",
+          "V03",
+          "V04",
+          "V05",
+          "V06",
+          "V07",
+          "V08",
+          "V09",
+          "V10",
+          "V11"
+        ],
+        [
+          "V01",
+          "V02",
+          "V03",
+          "V04",
+          "V05",
+          "V06",
+          "V07",
+          "V08",
+          "V09",
+          "V28",
+          "V27",
+          "V26"
+        ]
+      ],
+      "gameStationIds": [
+        "V01",
+        "V02",
+        "V03",
+        "V04",
+        "V05",
+        "V06",
+        "V07",
+        "V08",
+        "V09",
+        "V10",
+        "V11"
+      ]
+    },
+    {
+      "id": "NTALRT-K",
+      "operatorId": "NTALRT",
+      "operatorName": "新北捷運",
+      "lineId": "K",
+      "lineName": "安坑輕軌",
+      "color": "#9E925E",
+      "updatedAt": "2023-06-30T16:50:00+08:00",
+      "stations": [
+        {
+          "id": "K01",
+          "stationId": "K01",
+          "sequence": 1,
+          "nameZh": "雙城",
+          "nameEn": "Shuangcheng",
+          "target": "shuangcheng",
+          "address": "",
+          "lat": 24.946321,
+          "lon": 121.489645
+        },
+        {
+          "id": "K02",
+          "stationId": "K02",
+          "sequence": 2,
+          "nameZh": "玫瑰中國城",
+          "nameEn": "Rose China Town",
+          "target": "rose china town",
+          "address": "",
+          "lat": 24.95076,
+          "lon": 121.493861
+        },
+        {
+          "id": "K03",
+          "stationId": "K03",
+          "sequence": 3,
+          "nameZh": "台北小城",
+          "nameEn": "Taipei Xiaocheng",
+          "target": "taipei xiaocheng",
+          "address": "",
+          "lat": 24.954472,
+          "lon": 121.504674
+        },
+        {
+          "id": "K04",
+          "stationId": "K04",
+          "sequence": 4,
+          "nameZh": "耕莘安康院區",
+          "nameEn": "Cardinal Tien Hospital An Kang Branch",
+          "target": "cardinal tien hospital an kang branch",
+          "address": "",
+          "lat": 24.954463,
+          "lon": 121.504803
+        },
+        {
+          "id": "K05",
+          "stationId": "K05",
+          "sequence": 5,
+          "nameZh": "景文科大",
+          "nameEn": "Jinwen University of Science and Technology",
+          "target": "jinwen university of science and technology",
+          "address": "",
+          "lat": 24.955505,
+          "lon": 121.510387
+        },
+        {
+          "id": "K06",
+          "stationId": "K06",
+          "sequence": 6,
+          "nameZh": "安康",
+          "nameEn": "Ankang",
+          "target": "ankang",
+          "address": "",
+          "lat": 24.965213,
+          "lon": 121.51729
+        },
+        {
+          "id": "K07",
+          "stationId": "K07",
+          "sequence": 7,
+          "nameZh": "陽光運動公園",
+          "nameEn": "Sunshine Sports Park",
+          "target": "sunshine sports park",
+          "address": "",
+          "lat": 24.972351,
+          "lon": 121.519509
+        },
+        {
+          "id": "K08",
+          "stationId": "K08",
+          "sequence": 8,
+          "nameZh": "新和國小",
+          "nameEn": "Xinhe Elementary School",
+          "target": "xinhe elementary school",
+          "address": "",
+          "lat": 24.983483,
+          "lon": 121.518444
+        },
+        {
+          "id": "K09",
+          "stationId": "K09",
+          "sequence": 9,
+          "nameZh": "十四張",
+          "nameEn": "Shisizhang",
+          "target": "shisizhang",
+          "address": "新北市新店區民權路282號(輕軌十四張站)",
+          "lat": 24.984328,
+          "lon": 121.527247
+        }
+      ],
+      "segments": [
+        ["K01", "K02", "K03", "K04", "K05", "K06", "K07", "K08", "K09"]
+      ],
+      "gameStationIds": [
+        "K01",
+        "K02",
+        "K03",
+        "K04",
+        "K05",
+        "K06",
+        "K07",
+        "K08",
+        "K09"
       ]
     },
     {

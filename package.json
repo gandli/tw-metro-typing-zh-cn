@@ -11,6 +11,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test",
     "format": "prettier --write .",
     "data:map": "node scripts/import-map-data.mjs",
     "data:tdx-files": "node scripts/import-tdx-files.mjs",

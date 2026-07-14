@@ -34,15 +34,18 @@ input {
 
 .mobile-typing-input {
   position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 1px;
-  height: 1px;
+  z-index: -1;
+  left: 50%;
+  bottom: 72px;
+  width: min(420px, 70vw);
+  height: 2px;
   padding: 0;
   border: 0;
   opacity: 0;
   pointer-events: none;
   font-size: 16px;
+  text-align: center;
+  transform: translateX(-50%);
 }
 
 .screen-reader-status {
@@ -458,11 +461,6 @@ kbd {
 }
 
 .focus-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: center;
-  gap: 12px;
   width: min(720px, 100%);
   margin: 0 auto;
   padding: 12px;
@@ -472,49 +470,118 @@ kbd {
   box-shadow: var(--shadow);
   backdrop-filter: blur(12px);
 }
-.compact-modes {
+.run-picker,
+.option-toolbar,
+.segmented-control,
+.run-options,
+.segmented-options {
   display: flex;
-  gap: 8px;
+  align-items: center;
+}
+.run-picker {
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.control-label {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font:
+    700 9px "DM Mono",
+    monospace;
+  letter-spacing: 0.08em;
+}
+.run-options {
   flex: 1;
+  gap: 6px;
 }
-.run-modes {
-  flex-basis: 100%;
-  display: flex;
-  gap: 8px;
-}
-.run-modes .compact-mode {
-  min-height: 46px;
-}
-.compact-mode {
+.run-option {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 58px;
-  padding: 8px 16px;
+  min-width: 0;
+  min-height: 42px;
+  padding: 6px 12px;
   border: 1px solid var(--line);
-  border-radius: 13px;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--card) 76%, transparent);
   cursor: pointer;
 }
-.compact-mode input {
+.run-option input,
+.segment-option input {
   position: absolute;
   opacity: 0;
   pointer-events: none;
 }
-.compact-mode.selected {
+.run-option.selected {
   border-color: var(--focus-color);
   box-shadow: inset 0 0 0 1px var(--focus-color);
 }
-.compact-mode b,
-.compact-mode small {
-  display: block;
+.run-option > span {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
 }
-.compact-mode b {
+.run-option b {
+  overflow: hidden;
   font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.compact-mode small {
+.run-option small {
+  flex: 0 0 auto;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 9px;
+}
+.option-toolbar {
+  gap: 10px;
+}
+.segmented-control {
+  min-width: 0;
+  gap: 7px;
+}
+.segmented-options {
+  flex: 1;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--paper) 52%, transparent);
+}
+.segment-option {
+  min-width: 60px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.segment-option.selected {
+  background: color-mix(in srgb, var(--focus-color) 22%, var(--card));
+  box-shadow: inset 0 0 0 1px var(--focus-color);
+}
+.run-option input:focus-visible + span,
+.segment-option input:focus-visible + span {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.option-toolbar .start-button {
+  flex: 1;
+  min-width: 176px;
+  min-height: 44px;
+  border-radius: 12px;
+  padding-left: 20px;
+}
+.option-toolbar .start-button b {
+  width: 34px;
+  height: 34px;
 }
 .start-button,
 .secondary-button {
@@ -818,8 +885,17 @@ body.dark .focus-actions .start-button {
   font-size: 28px;
   line-height: 1;
 }
-.typing-target {
+.typing-area {
   position: relative;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 1fr;
+  border-top: 1px solid var(--line);
+}
+.typing-area.is-chinese {
+  grid-template-rows: minmax(0, 1fr) 22px;
+}
+.typing-target {
   min-height: 0;
   display: flex;
   align-items: center;
@@ -827,7 +903,6 @@ body.dark .focus-actions .start-button {
   flex-wrap: nowrap;
   white-space: nowrap;
   padding: 6px 24px 8px;
-  border-top: 1px solid var(--line);
   font:
     500 clamp(24px, 4vw, 36px) "DM Mono",
     monospace;
@@ -842,7 +917,38 @@ body.dark .focus-actions .start-button {
 }
 .typing-target .current {
   color: var(--active-route);
-  border-bottom: 3px solid currentColor;
+  text-decoration-line: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 0.16em;
+  text-decoration-skip-ink: none;
+}
+.typing-area.is-chinese .typing-target {
+  padding: 0 24px;
+  column-gap: 0.08em;
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: min(clamp(26px, 3.5vw, 32px), var(--fit-font, 32px));
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+}
+.composition-status {
+  min-height: 22px;
+  margin: 0;
+  padding: 4px 20px 3px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 15px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.composition-status.is-composing {
+  color: var(--ink);
+}
+.composition-status strong {
+  color: var(--active-route);
+  font-size: 11px;
 }
 .line-strip {
   display: flex;
@@ -1252,14 +1358,55 @@ body.dark .secondary-button {
   }
   .focus-actions {
     width: calc(100% - 18px);
-    flex-direction: column;
-    gap: 8px;
     margin-inline: auto;
     padding: 9px;
     border-radius: 18px;
   }
-  .compact-mode {
-    min-height: 48px;
+  .run-picker {
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 8px;
+  }
+  .run-picker > .control-label,
+  .segmented-control > .control-label {
+    display: none;
+  }
+  .run-options {
+    gap: 6px;
+  }
+  .run-option {
+    min-height: 40px;
+    padding: 5px 7px;
+  }
+  .run-option > span {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .run-option b {
+    max-width: 100%;
+    font-size: 11px;
+  }
+  .option-toolbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .segmented-control {
+    display: block;
+  }
+  .segmented-options {
+    width: 100%;
+  }
+  .segment-option {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 36px;
+    padding-inline: 8px;
+  }
+  .option-toolbar .start-button {
+    grid-column: 1 / -1;
+    min-height: 50px;
   }
   .start-button {
     flex: 1 0 58px;

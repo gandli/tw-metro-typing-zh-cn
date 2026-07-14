@@ -8,6 +8,9 @@ export function GameScreen({
   mode,
   stationIndex,
   typedIndex,
+  target,
+  typingLanguage,
+  compositionText,
   completed,
   remaining,
   elapsed,
@@ -18,13 +21,16 @@ export function GameScreen({
 }) {
   const station = stations[stationIndex];
   const next = stations[stationIndex + 1] ?? null;
-  const trainProgress = station.target.length
-    ? typedIndex / station.target.length
+  const targetCharacters = [...target];
+  const trainProgress = targetCharacters.length
+    ? typedIndex / targetCharacters.length
     : 0;
+  const isChinese = typingLanguage === "zh";
   return (
     <section className="game" style={{ "--active-route": line.color }}>
       <p className="screen-reader-status" aria-live="polite" aria-atomic="true">
-        目前車站 {station.nameZh}，請輸入 {station.nameEn}
+        目前車站 {station.nameZh}，請輸入{" "}
+        {isChinese ? station.nameZh : station.nameEn}
       </p>
       <MetroMap
         mapModel={mapModel}
@@ -48,7 +54,7 @@ export function GameScreen({
           unit="秒"
         />
         <Metric label="到站" value={completed} unit="站" />
-        <Metric label="速度" value={metrics.wpm} unit="WPM" />
+        <Metric label="速度" value={metrics.speed} unit={metrics.speedUnit} />
         <Metric label="正確率" value={metrics.accuracy} unit="%" />
       </div>
       <article
@@ -74,27 +80,47 @@ export function GameScreen({
             ) : null}
           </div>
         </div>
-        <div
-          className="typing-target"
-          style={{
-            "--fit-font": `calc((min(760px, 94vw) - 48px) / ${(station.target.length * 0.65).toFixed(2)})`,
-          }}
-          aria-label={`請輸入 ${station.nameEn}`}
-        >
-          {[...station.target].map((character, index) => (
-            <span
-              key={`${character}-${index}`}
-              className={
-                index < typedIndex
-                  ? "typed"
-                  : index === typedIndex
-                    ? "current"
-                    : ""
-              }
+        <div className={`typing-area${isChinese ? " is-chinese" : ""}`}>
+          <div
+            className="typing-target"
+            style={{
+              "--fit-font": `calc((min(760px, 94vw) - 48px) / ${(targetCharacters.length * (isChinese ? 1 : 0.65)).toFixed(2)})`,
+            }}
+            aria-label={`請輸入 ${isChinese ? station.nameZh : station.nameEn}`}
+          >
+            {targetCharacters.map((character, index) => (
+              <span
+                key={`${character}-${index}`}
+                className={
+                  index < typedIndex
+                    ? "typed"
+                    : index === typedIndex
+                      ? "current"
+                      : ""
+                }
+              >
+                {character === " " ? "\u00A0" : character}
+              </span>
+            ))}
+          </div>
+          {isChinese ? (
+            <p
+              id="typing-instruction"
+              className={`composition-status${compositionText ? " is-composing" : ""}`}
             >
-              {character === " " ? "\u00A0" : character}
+              {compositionText ? (
+                <>
+                  選字中 · <strong>{compositionText}</strong>
+                </>
+              ) : (
+                "使用輸入法選字"
+              )}
+            </p>
+          ) : (
+            <span id="typing-instruction" className="screen-reader-status">
+              直接輸入畫面上的英文站名
             </span>
-          ))}
+          )}
         </div>
         <div className="line-strip">
           <i />

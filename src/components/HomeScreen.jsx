@@ -10,6 +10,8 @@ export function HomeScreen({
   onRunChange,
   mode,
   onModeChange,
+  typingLanguage,
+  onTypingLanguageChange,
   onSelect,
   onReset,
   onStart,
@@ -34,7 +36,7 @@ export function HomeScreen({
           一站一站，<em>越打越順。</em>
         </h1>
         <p className="lede">
-          在真實台灣地圖上選擇路線，沿著精確站點位置完成英文站名。每打對一個字，列車就會往下一站前進一段。
+          在真實台灣地圖上選擇路線，沿著精確站點位置完成英文或中文站名。每打對一個字，列車就會往下一站前進一段。
         </p>
         <div className="home-instruction">
           <b>01</b>
@@ -100,49 +102,52 @@ export function HomeScreen({
             style={{ "--focus-color": selectedLine.color }}
           >
             {runs.length > 1 ? (
-              <div className="run-modes" aria-label="選擇行駛區間">
-                {runs.map((run, index) => (
-                  <label
-                    key={run.label}
-                    className={`compact-mode${runIndex === index ? " selected" : ""}`}
-                  >
-                    <input
-                      type="radio"
-                      name="run"
-                      value={index}
-                      checked={runIndex === index}
-                      onChange={() => onRunChange(index)}
-                    />
-                    <span>
-                      <b>{run.label}</b>
-                      <small>{run.stations.length} 站</small>
-                    </span>
-                  </label>
-                ))}
+              <div className="run-picker" aria-label="選擇行駛區間">
+                <span className="control-label">區間</span>
+                <div className="run-options">
+                  {runs.map((run, index) => (
+                    <label
+                      key={run.label}
+                      className={`run-option${runIndex === index ? " selected" : ""}`}
+                    >
+                      <input
+                        type="radio"
+                        name="run"
+                        value={index}
+                        checked={runIndex === index}
+                        onChange={() => onRunChange(index)}
+                      />
+                      <span>
+                        <b>{run.label}</b>
+                        <small>{run.stations.length} 站</small>
+                      </span>
+                    </label>
+                  ))}
+                </div>
               </div>
             ) : null}
-            <div className="compact-modes">
-              <ModeOption
-                value="timed"
-                mode={mode}
-                onChange={onModeChange}
-                title="30 秒快打"
-                subtitle="限時挑戰"
+            <div className="option-toolbar">
+              <SegmentedControl
+                label="站名"
+                name="typing-language"
+                value={typingLanguage}
+                onChange={onTypingLanguageChange}
+                options={LANGUAGE_OPTIONS}
               />
-              <ModeOption
-                value="line"
-                mode={mode}
+              <SegmentedControl
+                label="玩法"
+                name="mode"
+                value={mode}
                 onChange={onModeChange}
-                title="全線挑戰"
-                subtitle="一路到終點"
+                options={GAME_MODE_OPTIONS}
               />
+              <button className="start-button" type="button" onClick={onStart}>
+                <span>開始這條路線</span>
+                <b>
+                  <ArrowRight size={20} />
+                </b>
+              </button>
             </div>
-            <button className="start-button" type="button" onClick={onStart}>
-              <span>開始這條路線</span>
-              <b>
-                <ArrowRight size={20} />
-              </b>
-            </button>
           </div>
         ) : null}
       </div>
@@ -150,20 +155,37 @@ export function HomeScreen({
   );
 }
 
-function ModeOption({ value, mode, onChange, title, subtitle }) {
+const LANGUAGE_OPTIONS = [
+  { value: "en", label: "英文" },
+  { value: "zh", label: "中文" },
+];
+
+const GAME_MODE_OPTIONS = [
+  { value: "timed", label: "30 秒" },
+  { value: "line", label: "全線" },
+];
+
+function SegmentedControl({ label, name, value, onChange, options }) {
   return (
-    <label className={`compact-mode${mode === value ? " selected" : ""}`}>
-      <input
-        type="radio"
-        name="mode"
-        value={value}
-        checked={mode === value}
-        onChange={() => onChange(value)}
-      />
-      <span>
-        <b>{title}</b>
-        <small>{subtitle}</small>
-      </span>
-    </label>
+    <div className="segmented-control" role="group" aria-label={label}>
+      <span className="control-label">{label}</span>
+      <div className="segmented-options">
+        {options.map((option) => (
+          <label
+            key={option.value}
+            className={`segment-option${value === option.value ? " selected" : ""}`}
+          >
+            <input
+              type="radio"
+              name={name}
+              value={option.value}
+              checked={value === option.value}
+              onChange={() => onChange(option.value)}
+            />
+            <span>{option.label}</span>
+          </label>
+        ))}
+      </div>
+    </div>
   );
 }

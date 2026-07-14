@@ -22,8 +22,8 @@ export function ResultScreen({
             <span>通過站數</span>
           </div>
           <div>
-            <strong>{metrics.wpm}</strong>
-            <span>平均 WPM</span>
+            <strong>{metrics.speed}</strong>
+            <span>平均 {metrics.speedUnit}</span>
           </div>
           <div>
             <strong>{metrics.accuracy}%</strong>

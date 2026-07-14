@@ -5,6 +5,12 @@ import { HomeScreen } from "./components/HomeScreen";
 import { ResultScreen } from "./components/ResultScreen";
 import { useMapData } from "./hooks/useMapData";
 import { buildMapModel, getPlayableStations } from "./lib/map";
+import {
+  getTypingTarget,
+  isTypingCharacterMatch,
+  normalizeCommittedText,
+  TYPING_LANGUAGES,
+} from "./lib/typing";
 
 const TIMED_MS = 30000;
 
@@ -18,6 +24,9 @@ export default function App() {
   const [selectedLineId, setSelectedLineId] = useState(null);
   const [runIndex, setRunIndex] = useState(0);
   const [mode, setMode] = useState("timed");
+  const [typingLanguage, setTypingLanguage] = useState(
+    TYPING_LANGUAGES.ENGLISH,
+  );
   const [dark, setDark] = useState(false);
   const [stationIndex, setStationIndex] = useState(0);
   const [typedIndex, setTypedIndex] = useState(0);
@@ -26,8 +35,11 @@ export default function App() {
   const [completed, setCompleted] = useState(0);
   const [elapsedMs, setElapsedMs] = useState(0);
   const [shake, setShake] = useState(false);
+  const [compositionText, setCompositionText] = useState("");
   const startTimeRef = useRef(0);
   const typingInputRef = useRef(null);
+  const gameActiveRef = useRef(false);
+  const isComposingRef = useRef(false);
   // Typing progress can advance faster than React re-renders during fast bursts,
   // so input position and the active station are also tracked synchronously.
   const typedIndexRef = useRef(0);
@@ -42,9 +54,14 @@ export default function App() {
   const attempts = correct + errors;
   const elapsed = Math.floor(elapsedMs / 1000);
   const remaining = Math.max(Math.ceil((TIMED_MS - elapsedMs) / 1000), 0);
+  const minutes = Math.max(elapsedMs, 2000) / 60000;
   const metrics = {
     // Clamp to 2s so the first keystrokes don't show an absurd spike.
-    wpm: Math.round(correct / 5 / (Math.max(elapsedMs, 2000) / 60000)),
+    speed:
+      typingLanguage === TYPING_LANGUAGES.CHINESE
+        ? Math.round(correct / minutes)
+        : Math.round(correct / 5 / minutes),
+    speedUnit: typingLanguage === TYPING_LANGUAGES.CHINESE ? "CPM" : "WPM",
     accuracy: attempts ? Math.round((correct / attempts) * 100) : 100,
   };
   const showSiteChrome = screen !== "game";
@@ -53,8 +70,16 @@ export default function App() {
     document.body.classList.toggle("dark", dark);
   }, [dark]);
 
+  const resetTypingInput = useCallback(() => {
+    isComposingRef.current = false;
+    if (typingInputRef.current) typingInputRef.current.value = "";
+    setCompositionText("");
+  }, []);
+
   const startGame = useCallback(() => {
     if (!selectedLine) return;
+    resetTypingInput();
+    gameActiveRef.current = true;
     typingInputRef.current?.focus({ preventScroll: true });
     typedIndexRef.current = 0;
     stationIndexRef.current = 0;
@@ -66,27 +91,33 @@ export default function App() {
     setElapsedMs(0);
     startTimeRef.current = performance.now();
     setScreen("game");
-  }, [selectedLine]);
+  }, [resetTypingInput, selectedLine]);
 
   const backToHome = useCallback(() => {
+    gameActiveRef.current = false;
+    resetTypingInput();
     typingInputRef.current?.blur();
     setSelectedLineId(null);
     setRunIndex(0);
     setScreen("home");
-  }, []);
+  }, [resetTypingInput]);
 
   const selectLine = useCallback((lineId) => {
+    window.scrollTo({ top: 0 });
     setSelectedLineId(lineId);
     setRunIndex(0);
   }, []);
 
   const finishGame = useCallback(() => {
+    if (!gameActiveRef.current) return;
+    gameActiveRef.current = false;
+    resetTypingInput();
     typingInputRef.current?.blur();
     // Capture the exact finish time instead of the last whole-second tick.
     const ms = performance.now() - startTimeRef.current;
     setElapsedMs(mode === "timed" ? Math.min(ms, TIMED_MS) : ms);
     setScreen("result");
-  }, [mode]);
+  }, [mode, resetTypingInput]);
 
   useEffect(() => {
     if (screen !== "game") return undefined;
@@ -118,15 +149,16 @@ export default function App() {
 
   const typeCharacter = useCallback(
     (character) => {
-      if (screen !== "game" || character.length !== 1) return;
+      if (!gameActiveRef.current || [...character].length !== 1) return;
       const station = stations[stationIndexRef.current];
       if (!station) return;
-      const expected = station.target[typedIndexRef.current];
-      const typed = character.toLowerCase();
-      if (typed === expected) {
+      const target = getTypingTarget(station, typingLanguage);
+      const targetCharacters = [...target];
+      const expected = targetCharacters[typedIndexRef.current];
+      if (isTypingCharacterMatch(character, expected, typingLanguage)) {
         typedIndexRef.current += 1;
         setCorrect((value) => value + 1);
-        if (typedIndexRef.current >= station.target.length) advanceStation();
+        if (typedIndexRef.current >= targetCharacters.length) advanceStation();
         else setTypedIndex(typedIndexRef.current);
       } else {
         setErrors((value) => value + 1);
@@ -135,20 +167,55 @@ export default function App() {
         setTimeout(() => setShake(false), 170);
       }
     },
-    [advanceStation, screen, stations],
+    [advanceStation, stations, typingLanguage],
+  );
+
+  const consumeTypingInput = useCallback(
+    (input) => {
+      const value = input.value;
+      if (!value) return;
+      input.value = "";
+      setCompositionText("");
+      for (const character of normalizeCommittedText(value, typingLanguage))
+        typeCharacter(character);
+    },
+    [typeCharacter, typingLanguage],
   );
 
   const handleTypingInput = useCallback(
     (event) => {
-      const value = event.currentTarget.value;
-      event.currentTarget.value = "";
-      for (const character of value) typeCharacter(character);
+      if (isComposingRef.current || event.nativeEvent.isComposing) {
+        setCompositionText(event.currentTarget.value);
+        return;
+      }
+      consumeTypingInput(event.currentTarget);
     },
-    [typeCharacter],
+    [consumeTypingInput],
+  );
+
+  const handleCompositionStart = useCallback((event) => {
+    isComposingRef.current = true;
+    setCompositionText(event.currentTarget.value);
+  }, []);
+
+  const handleCompositionUpdate = useCallback((event) => {
+    setCompositionText(event.data || event.currentTarget.value || "");
+  }, []);
+
+  const handleCompositionEnd = useCallback(
+    (event) => {
+      isComposingRef.current = false;
+      setCompositionText("");
+      // compositionend fires after the input control contains the committed
+      // candidate, so consume it here and ignore all interim composition input.
+      consumeTypingInput(event.currentTarget);
+    },
+    [consumeTypingInput],
   );
 
   useEffect(() => {
     const onKeyDown = (event) => {
+      if (event.isComposing || event.keyCode === 229) return;
       if (event.key === "Escape") {
         if (screen === "game") backToHome();
         else if (screen === "home" && selectedLineId) {
@@ -169,7 +236,9 @@ export default function App() {
         return;
       if (
         event.key === " " ||
-        stations[stationIndex]?.target[typedIndexRef.current] === " "
+        getTypingTarget(stations[stationIndex], typingLanguage)[
+          typedIndexRef.current
+        ] === " "
       )
         event.preventDefault();
       typeCharacter(event.key);
@@ -183,7 +252,10 @@ export default function App() {
     stationIndex,
     stations,
     typeCharacter,
+    typingLanguage,
   ]);
+
+  const currentTarget = getTypingTarget(stations[stationIndex], typingLanguage);
 
   return (
     <div className="app-shell">
@@ -192,13 +264,21 @@ export default function App() {
         className="mobile-typing-input"
         type="text"
         inputMode="text"
-        enterKeyHint="done"
+        lang={typingLanguage === TYPING_LANGUAGES.CHINESE ? "zh-Hant" : "en"}
         autoCapitalize="none"
         autoComplete="off"
         autoCorrect="off"
-        spellCheck="false"
-        aria-label="打字輸入"
+        spellCheck={false}
+        aria-label={
+          typingLanguage === TYPING_LANGUAGES.CHINESE
+            ? "中文站名輸入"
+            : "英文站名輸入"
+        }
+        aria-describedby={screen === "game" ? "typing-instruction" : undefined}
         onInput={handleTypingInput}
+        onCompositionStart={handleCompositionStart}
+        onCompositionUpdate={handleCompositionUpdate}
+        onCompositionEnd={handleCompositionEnd}
       />
       {showSiteChrome ? (
         <header className="topbar">
@@ -240,6 +320,8 @@ export default function App() {
             onRunChange={setRunIndex}
             mode={mode}
             onModeChange={setMode}
+            typingLanguage={typingLanguage}
+            onTypingLanguageChange={setTypingLanguage}
             onSelect={selectLine}
             onReset={() => {
               setSelectedLineId(null);
@@ -260,6 +342,9 @@ export default function App() {
             mode={mode}
             stationIndex={stationIndex}
             typedIndex={typedIndex}
+            target={currentTarget}
+            typingLanguage={typingLanguage}
+            compositionText={compositionText}
             completed={completed}
             remaining={remaining}
             elapsed={elapsed}

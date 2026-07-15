@@ -3,3 +3,8 @@ node_modules/
 dist/
 .env
 .env.*
+
+# Playwright
+test-results/
+playwright-report/
+.playwright/

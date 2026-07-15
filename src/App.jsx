@@ -88,6 +88,8 @@ export default function App() {
     const sync = () => {
       const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
       document.documentElement.style.setProperty("--kb-h", `${kb}px`);
+      // 键盘弹起 (>100px 阈值) 时标记 body, CSS 用于精简小视口 UI
+      document.body.classList.toggle("kb-open", kb > 100);
     };
     sync();
     vv.addEventListener("resize", sync);
@@ -96,6 +98,7 @@ export default function App() {
       vv.removeEventListener("resize", sync);
       vv.removeEventListener("scroll", sync);
       document.documentElement.style.removeProperty("--kb-h");
+      document.body.classList.remove("kb-open");
     };
   }, [screen]);
 

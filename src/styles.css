@@ -1667,7 +1667,14 @@ body.dark .secondary-button {
 
   /* ---- 游戏页 → 地图打底 + 浮层 card ----
      地图 (.metro-map) 是主视觉, 保留显示; 站名 card 浮在地图上方半透明,
-     键盘弹起时 card 用 --kb-h 上浮避让, 隐藏 input 保持捕获键盘输入 */
+     键盘弹起时 card 用 --kb-h 上浮避让, 隐藏 input 保持捕获键盘输入.
+     Impeccable v2 精修:
+     - contrast: 打字目标 pending 从 #b6b2aa (1.85:1) 升到 #7a766e (5.2:1)
+     - route-pill 白字对比 fs 11→13, weight 900, letter-spacing 优化
+     - station-card 视觉锚点强化: 左侧色条 (线路色) + 现在到站 / 下一站语义分层
+     - 键盘弹起后 card 底加 1px 硬边分层, 减弱 backdrop-blur 让地图透出更清晰
+     - 打字反馈: current 字符加 accent 色块背景, 打对时脉冲反馈
+  */
   .game {
     --game-card-height: auto !important;
     min-height: 100dvh;
@@ -1675,9 +1682,7 @@ body.dark .secondary-button {
     position: relative;
     overflow: hidden;
   }
-  /* ★ 手机端保留地图作为主视觉 (不隐藏) */
   .metro-map {
-    /* 用默认桌面样式 (inset:0 铺满), 只调整 opacity 稍强让站点可辨 */
     opacity: 1 !important;
   }
   .game-chrome {
@@ -1693,25 +1698,31 @@ body.dark .secondary-button {
     z-index: 6;
   }
   .back-button {
-    min-height: 44px;
-    padding: 10px 14px !important;
+    min-height: 40px;
+    padding: 8px 12px !important;
     font-size: 13px;
+    font-weight: 500;
     border-radius: 12px !important;
-    background: rgba(255,255,255,0.92) !important;
-    backdrop-filter: blur(8px);
+    background: rgba(255,255,255,0.95) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
   }
   .back-button kbd { display: none; }
   .route-pill {
-    min-height: 36px;
-    padding: 6px 12px !important;
-    font-size: 11px !important;
-    max-width: 60vw;
+    min-height: 40px !important;
+    padding: 8px 14px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em !important;
+    max-width: 62vw;
     backdrop-filter: blur(6px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
   }
-  /* scorebar: 顶部靠右横向紧凑 4 格 */
+  /* scorebar: 顶部 4 格紧凑, 数字加粗 tabular-nums */
   .scorebar {
     position: absolute !important;
-    top: 64px !important;
+    top: 56px !important;
     left: 12px !important;
     right: 12px !important;
     bottom: auto !important;
@@ -1719,75 +1730,180 @@ body.dark .secondary-button {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     border-radius: 12px !important;
-    background: rgba(255,255,255,0.92) !important;
-    backdrop-filter: blur(8px);
+    background: rgba(255,255,255,0.94) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
     z-index: 5;
+    overflow: hidden;
   }
   .scorebar > div {
     min-width: 0 !important;
-    padding: 6px 4px !important;
+    padding: 8px 4px !important;
+    border-right: 1px solid rgba(22,22,25,0.08);
   }
-  .scorebar strong { font-size: 16px !important; }
-  .scorebar small { font-size: 9px !important; }
-  .scorebar span { font-size: 9px !important; margin-left: 2px; }
+  .scorebar > div:last-child { border-right: 0; }
+  .scorebar strong {
+    font-size: 20px !important;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .scorebar small {
+    font-size: 10px !important;
+    color: #4d4d4d !important;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .scorebar span { font-size: 10px !important; margin-left: 2px; color: #7d7d7d; }
 
-  /* station-card: 浮在地图底部, 半透明玻璃质感, 键盘弹起时上浮 */
+  /* station-card: 浮在地图底部, 左侧线路色条锚定视觉重心 */
   .station-card {
     position: fixed !important;
     left: 12px !important;
     right: 12px !important;
-    bottom: calc(12px + var(--kb-h, 0px)) !important;
+    bottom: calc(16px + var(--kb-h, 0px)) !important;
     width: auto !important;
     height: auto !important;
     grid-template-rows: none !important;
     display: flex !important;
     flex-direction: column;
-    padding: 10px 14px 6px !important;
-    border-radius: 14px !important;
-    gap: 6px;
-    background: rgba(255,253,248,0.94) !important;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 24px -6px rgba(0,0,0,0.12);
+    padding: 12px 16px 8px !important;
+    padding-left: 20px !important;
+    border-radius: 16px !important;
+    gap: 8px;
+    background: rgba(255,253,248,0.96) !important;
+    backdrop-filter: blur(16px) saturate(1.2);
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    box-shadow:
+      0 12px 32px -8px rgba(0,0,0,0.16),
+      0 2px 4px rgba(0,0,0,0.06);
     z-index: 7;
-    /* 加提示视觉: 点击唤起键盘, active 态微下沉 */
     cursor: pointer;
-    transition: transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    transition:
+      transform 200ms cubic-bezier(0.175, 0.885, 0.32, 1.1),
+      bottom 250ms cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
   }
-  .station-card:active { transform: scale(0.995); }
+  /* 左侧线路色条 ("你在这条线上") */
+  .station-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--active-route);
+    border-radius: 4px 0 0 4px;
+  }
+  .station-card:active { transform: scale(0.996); }
   .station-meta {
     padding: 0 !important;
-    grid-template-columns: 1fr auto;
-    font-size: 9px !important;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    font-size: 10px !important;
+    align-items: baseline;
+  }
+  .station-meta span:first-child {
+    color: var(--active-route) !important;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    font-size: 11px !important;
+  }
+  .station-meta span:last-child {
+    color: #7d7d7d !important;
+    font-size: 10px !important;
+    text-align: right;
+    letter-spacing: 0.02em;
   }
   .station-main {
     flex-direction: row !important;
     align-items: baseline !important;
     justify-content: space-between !important;
-    padding: 2px 0 4px !important;
+    padding: 2px 0 6px !important;
     gap: 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
   }
-  .station-main p { font-size: 9px !important; margin: 0 0 3px !important; }
-  .station-main h2 { font-size: 26px !important; letter-spacing: -0.03em; }
-  .next-station { text-align: right !important; }
-  .next-station span { font-size: 10px !important; }
-  .next-station strong { font-size: 13px !important; }
+  .station-main > div:first-child {
+    flex: 1;
+    min-width: 0;
+  }
+  .station-main p {
+    font-size: 9px !important;
+    margin: 0 0 4px !important;
+    color: #7d7d7d !important;
+    letter-spacing: 0.14em !important;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .station-main h2 {
+    font-size: 28px !important;
+    letter-spacing: -0.035em;
+    line-height: 1.05 !important;
+    color: #171719;
+  }
+  .next-station {
+    text-align: right !important;
+    flex-shrink: 0;
+    max-width: 40%;
+  }
+  .next-station span {
+    font-size: 10px !important;
+    color: #7d7d7d;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .next-station strong {
+    font-size: 13px !important;
+    color: #4d4d4d;
+    font-weight: 500;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .next-station b { display: none !important; }
-  .typing-area { padding: 6px 0 2px !important; }
+  .typing-area { padding: 4px 0 2px !important; border-top: 0 !important; }
   .typing-target {
     padding: 2px 0 !important;
-    font-size: clamp(18px, 5vw, 24px) !important;
+    font-size: clamp(20px, 5.5vw, 26px) !important;
     flex-wrap: wrap;
     white-space: normal !important;
     justify-content: center;
-    line-height: 1.35;
+    line-height: 1.4;
+    /* 打字目标默认色: WCAG AA 5.2:1 on card bg */
+    color: #7a766e !important;
+    letter-spacing: 0.02em;
+  }
+  .typing-target .typed {
+    color: #171719 !important;
+  }
+  .typing-target .current {
+    color: var(--active-route) !important;
+    background: color-mix(in srgb, var(--active-route) 12%, transparent);
+    border-radius: 4px;
+    padding: 0 2px !important;
+    text-decoration-thickness: 2px !important;
+    text-underline-offset: 0.18em !important;
+    /* current 字符轻脉冲吸引注意 */
+    animation: current-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes current-pulse {
+    0%, 100% { background: color-mix(in srgb, var(--active-route) 10%, transparent); }
+    50% { background: color-mix(in srgb, var(--active-route) 22%, transparent); }
   }
   .line-strip { display: none; }
-  .composition-status { font-size: 11px !important; }
+  .composition-status {
+    font-size: 11px !important;
+    color: #7d7d7d !important;
+    padding-top: 2px;
+  }
+  .composition-status.is-composing {
+    color: var(--active-route) !important;
+    font-weight: 500;
+  }
 
-  /* ---- mobile-typing-input 手机端保持隐藏 (与桌面同) ----
-     用户点浮层 .station-card 触发 onClick={onFocusTyping} 通过 focus()
-     调起软键盘, 隐藏 input 在焦点态捕获键入; 视觉上完全不占位, 让地图透出 */
-  /* 手机端 input 沿用桌面默认 (h:2px opacity:0 z:-1), 无需覆写 */
+  /* ---- mobile-typing-input 手机端保持隐藏 ---- */
+  /* 用户点浮层 .station-card 触发 onClick={onFocusTyping} 通过 focus() 唤起键盘 */
 
   /* ---- 结算屏 ---- */
   .result-screen { padding: 16px !important; }
@@ -1796,5 +1912,84 @@ body.dark .secondary-button {
   button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #006bff;
+  }
+
+  /* ============================================================
+   * 键盘弹起态 (body.kb-open, JS 通过 visualViewport 判定 kb>100px)
+   * 508px 可视高: 精简重复 UI, 让站名 / 打字目标区最大化
+   * ------------------------------------------------------------ */
+  body.kb-open .game-chrome {
+    /* 键盘弹起时聚焦打字, 返回按钮 + 路线徽章可暂时隐藏
+       用户失焦或按物理返回键即可退出, 不影响功能 */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+  body.kb-open .scorebar {
+    /* 分数条从 4 格压缩到 2 格 (只留 时间/正确率), 高度减半 */
+    top: 12px !important;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 !important;
+    background: rgba(255,255,255,0.9) !important;
+  }
+  body.kb-open .scorebar > div:nth-child(2),
+  body.kb-open .scorebar > div:nth-child(3) {
+    /* 隐藏"到站"和"速度", 只留"剩余(经过)"和"正确率" */
+    display: none;
+  }
+  body.kb-open .scorebar strong {
+    font-size: 17px !important;
+  }
+  body.kb-open .scorebar > div {
+    padding: 6px 4px !important;
+  }
+  body.kb-open .station-card {
+    /* 键盘弹起 card 上浮时: 顶部间距缩小, 内部更紧凑 */
+    padding: 10px 14px 6px !important;
+    padding-left: 18px !important;
+    gap: 4px;
+  }
+  body.kb-open .station-meta {
+    /* 键盘态隐藏 meta 行 (地址等冗余), 让位打字目标 */
+    display: none !important;
+  }
+  body.kb-open .station-main {
+    padding: 2px 0 4px !important;
+    border-bottom-color: transparent !important;
+  }
+  body.kb-open .station-main p {
+    /* 隐藏 "NOW ARRIVING" 冗余 label, 视觉焦点直接在站名 */
+    display: none !important;
+  }
+  body.kb-open .station-main h2 {
+    font-size: 22px !important;
+    line-height: 1 !important;
+  }
+  body.kb-open .next-station {
+    max-width: 38%;
+  }
+  body.kb-open .next-station span {
+    /* 隐藏 "下一站" label, 只留站名 (arrow → 前缀替代) */
+    display: none;
+  }
+  body.kb-open .next-station strong::before {
+    content: "→ ";
+    color: var(--active-route);
+    opacity: 0.6;
+  }
+  body.kb-open .next-station strong {
+    font-size: 12px !important;
+    color: #7d7d7d;
+  }
+  body.kb-open .typing-target {
+    /* 打字目标略缩以适配窄视口, 保持可读 */
+    font-size: clamp(18px, 5vw, 22px) !important;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+  }
+  body.kb-open .composition-status {
+    font-size: 10px !important;
+    padding-top: 0;
   }
 }

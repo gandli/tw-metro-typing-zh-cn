@@ -15,7 +15,7 @@ import {
   normalizeCommittedText,
   TYPING_LANGUAGES,
 } from "./lib/typing";
-import { isChineseLanguage } from "./lib/i18n";
+import { isChineseLanguage, t as tr } from "./lib/i18n";
 
 const TIMED_MS = 30000;
 
@@ -331,16 +331,35 @@ export default function App() {
             className="brand"
             type="button"
             onClick={backToHome}
-            aria-label="回到首页"
+            aria-label={tr("brandBack", typingLanguage)}
           >
             <span>TAIWAN METRO TYPING</span>
           </button>
           <div className="top-actions">
             <button
+              className="icon-button lang-cycle"
+              type="button"
+              aria-label={tr("langLabel", typingLanguage)}
+              onClick={() => {
+                const order = ["en", "zh-Hans", "zh-Hant"];
+                const next = order[(order.indexOf(typingLanguage) + 1) % 3];
+                setTypingLanguage(next);
+              }}
+              title={tr("langLabel", typingLanguage)}
+            >
+              <span className="lang-tag">
+                {typingLanguage === "en"
+                  ? "EN"
+                  : typingLanguage === "zh-Hans"
+                    ? "简"
+                    : "繁"}
+              </span>
+            </button>
+            <button
               className="icon-button"
               type="button"
               aria-pressed={dark}
-              aria-label="切换深色模式"
+              aria-label={tr("themeToggle", typingLanguage) || "切换深色模式"}
               onClick={() => setDark((value) => !value)}
             >
               {dark ? <Sun size={17} /> : <Moon size={17} />}
@@ -353,7 +372,7 @@ export default function App() {
         {!error && (!data || !mapModel) ? (
           <div className="loading">
             <span />
-            正在载入台湾路网…
+            {tr("loading", typingLanguage)}
           </div>
         ) : null}
         {data && mapModel && screen === "home" ? (

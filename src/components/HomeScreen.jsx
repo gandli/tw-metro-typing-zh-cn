@@ -149,13 +149,6 @@ export function HomeScreen({
             ) : null}
             <div className="option-toolbar">
               <SegmentedControl
-                label={t("langLabel", typingLanguage)}
-                name="typing-language"
-                value={typingLanguage}
-                onChange={onTypingLanguageChange}
-                options={getLanguageOptions(typingLanguage)}
-              />
-              <SegmentedControl
                 label={t("modeLabel", typingLanguage)}
                 name="mode"
                 value={mode}
@@ -232,15 +225,6 @@ const LANGUAGE_OPTIONS = [
   { value: "zh-Hans", label: "简体" },
   { value: "zh-Hant", label: "繁體" },
 ];
-
-// 依语言返回语言选项 (英文档时"英文"档标签显示 English 而不是"英文")
-function getLanguageOptions(language) {
-  return [
-    { value: "en", label: t("langEn", language) },
-    { value: "zh-Hans", label: t("langHans", language) },
-    { value: "zh-Hant", label: t("langHant", language) },
-  ];
-}
 
 const GAME_MODE_OPTIONS = [
   { value: "timed", label: "30 秒" },

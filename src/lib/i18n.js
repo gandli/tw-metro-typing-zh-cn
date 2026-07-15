@@ -125,7 +125,7 @@ const UI_STRINGS = {
   },
   // Home 顶部介绍 / 状态
   heroLine1: {
-    en: "Station by station,",
+    en: "Station by station. ",
     "zh-Hans": "一站一站，",
     "zh-Hant": "一站一站，",
   },
@@ -188,6 +188,21 @@ const UI_STRINGS = {
   langEn: { en: "English", "zh-Hans": "English", "zh-Hant": "English" },
   langHans: { en: "简体", "zh-Hans": "简体", "zh-Hant": "简体" },
   langHant: { en: "繁體", "zh-Hans": "繁體", "zh-Hant": "繁體" },
+  themeToggle: {
+    en: "Toggle theme",
+    "zh-Hans": "切换深色模式",
+    "zh-Hant": "切換深色模式",
+  },
+  brandBack: {
+    en: "Back to home",
+    "zh-Hans": "回到首页",
+    "zh-Hant": "回到首頁",
+  },
+  loading: {
+    en: "Loading Taiwan metro network…",
+    "zh-Hans": "正在载入台湾路网…",
+    "zh-Hant": "正在載入台灣路網…",
+  },
 };
 
 /** 取 UI 文案. t('back', 'zh-Hant') → '返回選線' */

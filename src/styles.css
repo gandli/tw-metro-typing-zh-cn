@@ -243,6 +243,18 @@ main {
   height: 3px;
   background: var(--accent);
 }
+/* 语言 cycle 按钮: 文本标签 (EN / 简 / 繁), 与 icon-button 尺寸对齐 */
+.icon-button.lang-cycle {
+  font-family:
+    "SF Pro Text", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+.icon-button.lang-cycle .lang-tag {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--fg);
+  line-height: 1;
+}
 h1 {
   max-width: 900px;
   margin: 24px 0 18px;

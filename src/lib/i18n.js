@@ -158,7 +158,7 @@ const UI_STRINGS = {
     "zh-Hant": "一站一站，",
   },
   heroLine2: {
-    en: "type your way through.",
+    en: "Type your way through.",
     "zh-Hans": "越打越顺。",
     "zh-Hant": "越打越順。",
   },
@@ -166,6 +166,59 @@ const UI_STRINGS = {
     en: "Pick a route on the real Taiwan map and type each station name in English or Chinese along the actual line. Each correct character moves the train one hop.",
     "zh-Hans": "在真实台湾地图上选择路线，沿著精确站点位置完成英文或中文站名。每打对一个字，列车就会往下一站前进一段。",
     "zh-Hant": "在真實台灣地圖上選擇路線，沿著精確站點位置完成英文或中文站名。每打對一個字，列車就會往下一站前進一段。",
+  },
+  // Home eyebrow: 事实型 tagline, 强调真实站点数据 (非 SaaS 模板 kicker)
+  homeEyebrow: {
+    en: "Real routes, real stations",
+    "zh-Hans": "真实路线，真实站点",
+    "zh-Hant": "真實路線，真實站點",
+  },
+  // Focus 卡片头部: 已选择的路线
+  selectedRouteLabel: {
+    en: "Selected route",
+    "zh-Hans": "已选路线",
+    "zh-Hant": "已選路線",
+  },
+  // Result 卡片头部: 一段旅程结束
+  resultKicker: {
+    en: "Route complete",
+    "zh-Hans": "旅程完成",
+    "zh-Hant": "旅程完成",
+  },
+  resultTitle: {
+    en: "That was a smooth ride.",
+    "zh-Hans": "这班车，跑得很顺。",
+    "zh-Hant": "這班車，跑得很順。",
+  },
+  resultSummary: {
+    en: "You passed {completed} stations in {elapsed} seconds.",
+    "zh-Hans": "你在 {elapsed} 秒内通过了 {completed} 个车站。",
+    "zh-Hant": "你在 {elapsed} 秒內通過了 {completed} 個車站。",
+  },
+  resultStationsLabel: {
+    en: "Stations cleared",
+    "zh-Hans": "通过站数",
+    "zh-Hant": "通過站數",
+  },
+  resultSpeedPrefix: {
+    en: "Avg",
+    "zh-Hans": "平均",
+    "zh-Hant": "平均",
+  },
+  resultAccuracyLabel: {
+    en: "Accuracy",
+    "zh-Hans": "正确率",
+    "zh-Hant": "正確率",
+  },
+  resultRestart: {
+    en: "Pick another route",
+    "zh-Hans": "重新选线",
+    "zh-Hant": "重新選線",
+  },
+  resultRetry: {
+    en: "Run it again",
+    "zh-Hans": "再跑一次",
+    "zh-Hant": "再跑一次",
   },
   heroCallout: {
     en: "Pick a route from the map or the list below",

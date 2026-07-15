@@ -425,6 +425,7 @@ export default function App() {
             completed={completed}
             metrics={metrics}
             routeColor={selectedLine?.color}
+            language={typingLanguage}
             onBack={backToHome}
             onRetry={startGame}
           />

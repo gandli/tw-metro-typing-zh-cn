@@ -44,7 +44,7 @@ export function HomeScreen({
         aria-hidden={selectedLine ? "true" : undefined}
       >
         <div className="eyebrow">
-          <span /> REAL ROUTES · REAL STATIONS
+          <span /> {t("homeEyebrow", typingLanguage)}
         </div>
         <h1>
           {t("heroLine1", typingLanguage)}<em>{t("heroLine2", typingLanguage)}</em>
@@ -69,7 +69,7 @@ export function HomeScreen({
             <ArrowLeft size={15} /> {t("backToTaiwan", typingLanguage)} <kbd>ESC</kbd>
           </button>
           <div className="route-focus-card" aria-live="polite">
-            <span className="focus-kicker">SELECTED ROUTE</span>
+            <span className="focus-kicker">{t("selectedRouteLabel", typingLanguage)}</span>
             <div className="focus-route-title">
               <span
                 className="focus-line-code"

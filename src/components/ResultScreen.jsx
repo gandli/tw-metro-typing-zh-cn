@@ -1,41 +1,48 @@
 import { RotateCcw } from "lucide-react";
+import { t } from "../lib/i18n";
 
 export function ResultScreen({
   elapsed,
   completed,
   metrics,
   routeColor,
+  language = "zh-Hans",
   onBack,
   onRetry,
 }) {
+  // 插值 helper: {elapsed} / {completed} → 实际值
+  const summary = t("resultSummary", language)
+    .replace("{elapsed}", elapsed)
+    .replace("{completed}", completed);
+
   return (
     <section className="results" style={{ "--result-route": routeColor }}>
       <div className="result-card">
-        <span className="result-kicker">JOURNEY COMPLETE</span>
-        <h2>这班车，跑得很顺。</h2>
-        <p>
-          你在 {elapsed} 秒内通过了 {completed} 个车站。
-        </p>
+        <span className="result-kicker">{t("resultKicker", language)}</span>
+        <h2>{t("resultTitle", language)}</h2>
+        <p>{summary}</p>
         <div className="result-metrics">
           <div>
             <strong>{completed}</strong>
-            <span>通过站数</span>
+            <span>{t("resultStationsLabel", language)}</span>
           </div>
           <div>
             <strong>{metrics.speed}</strong>
-            <span>平均 {metrics.speedUnit}</span>
+            <span>
+              {t("resultSpeedPrefix", language)} {metrics.speedUnit}
+            </span>
           </div>
           <div>
             <strong>{metrics.accuracy}%</strong>
-            <span>正确率</span>
+            <span>{t("resultAccuracyLabel", language)}</span>
           </div>
         </div>
         <div className="result-actions">
           <button className="secondary-button" type="button" onClick={onBack}>
-            重新选线
+            {t("resultRestart", language)}
           </button>
           <button className="start-button" type="button" onClick={onRetry}>
-            <span>再跑一次</span>
+            <span>{t("resultRetry", language)}</span>
             <b>
               <RotateCcw size={19} />
             </b>

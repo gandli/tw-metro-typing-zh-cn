@@ -1,6 +1,7 @@
 import { useRef, useCallback, useEffect } from "react";
 import { useGesture } from "@use-gesture/react";
 import { getRouteViewBox, pointsToString } from "../lib/map";
+import { localizeText, t as tr } from "../lib/i18n";
 
 // 手势变换限制
 const MIN_SCALE = 0.5;
@@ -23,6 +24,7 @@ export function MetroMap({
   stations,
   stationIndex,
   trainProgress,
+  language,
 }) {
   const route = mapModel.routes.find((item) => item.id === selectedLine.id);
   const routeViewBox = getRouteViewBox(route, 44, 7);
@@ -134,7 +136,7 @@ export function MetroMap({
         ref={containerRef}
         className="metro-map-container"
         role="img"
-        aria-label={`${selectedLine.lineName ?? "捷运"} 路线图, 单指拖动, 双指缩放, 双击归位`}
+        aria-label={`${localizeText(selectedLine.lineName ?? "", language)} — ${tr("mapA11y", language)}`}
         onDoubleClick={resetTransform}
         style={{ touchAction: "none" }}
       >
@@ -218,9 +220,9 @@ export function MetroMap({
         className="map-reset-btn"
         data-visible="0"
         onClick={resetTransform}
-        aria-label="重置地图视角"
+        aria-label={tr("recenter", language)}
       >
-        <span aria-hidden="true">⊙</span> 归位
+        <span aria-hidden="true">⊙</span> {tr("recenter", language)}
       </button>
     </>
   );

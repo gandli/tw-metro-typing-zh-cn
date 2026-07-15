@@ -1665,140 +1665,129 @@ body.dark .secondary-button {
     box-shadow: 0 2px 2px rgba(0,0,0,0.04);
   }
 
-  /* ---- 游戏页 → 流式竖排 ----
-     软键盘弹出时通过 sticky + max-height 让关键区 (站名 + 打字目标) 常驻可视,
-     地图/装饰性区块被键盘覆盖不影响 usability */
+  /* ---- 游戏页 → 地图打底 + 浮层 card ----
+     地图 (.metro-map) 是主视觉, 保留显示; 站名 card 浮在地图上方半透明,
+     键盘弹起时 card 用 --kb-h 上浮避让, 隐藏 input 保持捕获键盘输入 */
   .game {
     --game-card-height: auto !important;
     min-height: 100dvh;
-    /* 键盘弹起时把 game 容器最大高度限制在 visualViewport, 避免超出可见区 */
-    max-height: calc(100dvh - var(--kb-h, 0px));
-    /* 底部留 76px = input 48 + 上下 padding 12+16, 避免 fixed input 遮 card 尾部 */
-    padding: 12px 12px 76px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    overflow-y: auto;
-    scroll-behavior: smooth;
-  }
-  .metro-map { display: none; }
-  .game-chrome {
-    position: static !important;
     padding: 0 !important;
-    flex-wrap: wrap;
+    position: relative;
+    overflow: hidden;
+  }
+  /* ★ 手机端保留地图作为主视觉 (不隐藏) */
+  .metro-map {
+    /* 用默认桌面样式 (inset:0 铺满), 只调整 opacity 稍强让站点可辨 */
+    opacity: 1 !important;
+  }
+  .game-chrome {
+    position: absolute !important;
+    top: 8px !important;
+    left: 12px !important;
+    right: 12px !important;
+    padding: 0 !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: 8px;
+    z-index: 6;
   }
   .back-button {
     min-height: 44px;
     padding: 10px 14px !important;
-    font-size: 14px;
+    font-size: 13px;
     border-radius: 12px !important;
+    background: rgba(255,255,255,0.92) !important;
+    backdrop-filter: blur(8px);
   }
   .back-button kbd { display: none; }
   .route-pill {
-    min-height: 40px;
-    padding: 8px 14px !important;
-    font-size: 12px !important;
-    max-width: 100%;
+    min-height: 36px;
+    padding: 6px 12px !important;
+    font-size: 11px !important;
+    max-width: 60vw;
+    backdrop-filter: blur(6px);
   }
+  /* scorebar: 顶部靠右横向紧凑 4 格 */
   .scorebar {
-    position: static !important;
+    position: absolute !important;
+    top: 64px !important;
+    left: 12px !important;
+    right: 12px !important;
+    bottom: auto !important;
     transform: none !important;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    width: 100%;
     border-radius: 12px !important;
-    overflow: hidden;
+    background: rgba(255,255,255,0.92) !important;
+    backdrop-filter: blur(8px);
+    z-index: 5;
   }
   .scorebar > div {
     min-width: 0 !important;
-    padding: 8px 4px !important;
-    border-right: 1px solid rgba(22,22,25,0.10);
+    padding: 6px 4px !important;
   }
-  .scorebar strong { font-size: 18px !important; }
-  .scorebar small { font-size: 10px; }
-  .scorebar span { font-size: 9px; margin-left: 2px; }
+  .scorebar strong { font-size: 16px !important; }
+  .scorebar small { font-size: 9px !important; }
+  .scorebar span { font-size: 9px !important; margin-left: 2px; }
 
+  /* station-card: 浮在地图底部, 半透明玻璃质感, 键盘弹起时上浮 */
   .station-card {
-    position: sticky !important;
-    top: 8px;
-    z-index: 5;
-    width: 100% !important;
+    position: fixed !important;
+    left: 12px !important;
+    right: 12px !important;
+    bottom: calc(12px + var(--kb-h, 0px)) !important;
+    width: auto !important;
     height: auto !important;
     grid-template-rows: none !important;
     display: flex !important;
     flex-direction: column;
-    padding: 12px 16px 4px !important;
-    border-radius: 16px !important;
-    gap: 8px;
+    padding: 10px 14px 6px !important;
+    border-radius: 14px !important;
+    gap: 6px;
+    background: rgba(255,253,248,0.94) !important;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 24px -6px rgba(0,0,0,0.12);
+    z-index: 7;
+    /* 加提示视觉: 点击唤起键盘, active 态微下沉 */
+    cursor: pointer;
+    transition: transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.1);
   }
+  .station-card:active { transform: scale(0.995); }
   .station-meta {
     padding: 0 !important;
     grid-template-columns: 1fr auto;
+    font-size: 9px !important;
   }
   .station-main {
-    flex-direction: column;
-    align-items: stretch !important;
-    padding: 4px 0 8px !important;
+    flex-direction: row !important;
+    align-items: baseline !important;
+    justify-content: space-between !important;
+    padding: 2px 0 4px !important;
     gap: 12px;
   }
-  .station-main h2 { font-size: 32px !important; letter-spacing: -0.04em; }
-  .next-station { text-align: left !important; }
+  .station-main p { font-size: 9px !important; margin: 0 0 3px !important; }
+  .station-main h2 { font-size: 26px !important; letter-spacing: -0.03em; }
+  .next-station { text-align: right !important; }
+  .next-station span { font-size: 10px !important; }
+  .next-station strong { font-size: 13px !important; }
   .next-station b { display: none !important; }
-  .typing-area {
-    padding: 12px 0 4px;
-  }
+  .typing-area { padding: 6px 0 2px !important; }
   .typing-target {
-    padding: 4px 0 !important;
-    font-size: clamp(20px, 6vw, 28px) !important;
+    padding: 2px 0 !important;
+    font-size: clamp(18px, 5vw, 24px) !important;
     flex-wrap: wrap;
     white-space: normal !important;
     justify-content: center;
-    line-height: 1.4;
+    line-height: 1.35;
   }
   .line-strip { display: none; }
+  .composition-status { font-size: 11px !important; }
 
-  /* ---- ★ 关键: mobile-typing-input 变可见输入框 ---- */
-  /* 桌面版隐藏 (opacity:0, h:2px, z:-1) 靠捕获物理键盘;
-     手机没物理键盘, 必须暴露可点击的输入框以唤起软键盘.
-     软键盘弹起时用 --kb-h (JS 从 visualViewport 计算) 顶开, 确保输入框可见 */
-  .mobile-typing-input {
-    position: fixed !important;
-    left: 50% !important;
-    bottom: calc(12px + var(--kb-h, 0px)) !important;
-    transform: translateX(-50%) !important;
-    z-index: 30 !important;
-    height: 48px !important;
-    width: calc(100% - 24px) !important;
-    max-width: 640px;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    padding: 0 16px !important;
-    margin: 8px 12px 0 !important;
-    border: 1.5px solid var(--active-route, #171717) !important;
-    border-radius: 12px !important;
-    background: #ffffff !important;
-    color: var(--ink, #171717) !important;
-    font-size: 16px !important;  /* iOS 16px 才不缩放 */
-    text-align: center !important;
-    box-shadow: 0 2px 2px rgba(0,0,0,0.04);
-  }
-  .mobile-typing-input:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #006bff;
-  }
-  /* game 页面之外不显示 (首页/结算不需要输入框可见) */
-  body:not(.game-active) .mobile-typing-input {
-    position: fixed !important;
-    height: 2px !important;
-    width: 1px !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    z-index: -1 !important;
-    border: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
+  /* ---- mobile-typing-input 手机端保持隐藏 (与桌面同) ----
+     用户点浮层 .station-card 触发 onClick={onFocusTyping} 通过 focus()
+     调起软键盘, 隐藏 input 在焦点态捕获键入; 视觉上完全不占位, 让地图透出 */
+  /* 手机端 input 沿用桌面默认 (h:2px opacity:0 z:-1), 无需覆写 */
 
   /* ---- 结算屏 ---- */
   .result-screen { padding: 16px !important; }

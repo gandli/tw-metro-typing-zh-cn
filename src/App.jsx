@@ -15,6 +15,7 @@ import {
   normalizeCommittedText,
   TYPING_LANGUAGES,
 } from "./lib/typing";
+import { isChineseLanguage } from "./lib/i18n";
 
 const TIMED_MS = 30000;
 
@@ -62,11 +63,10 @@ export default function App() {
   const minutes = Math.max(elapsedMs, 2000) / 60000;
   const metrics = {
     // Clamp to 2s so the first keystrokes don't show an absurd spike.
-    speed:
-      typingLanguage === TYPING_LANGUAGES.CHINESE
-        ? Math.round(correct / minutes)
-        : Math.round(correct / 5 / minutes),
-    speedUnit: typingLanguage === TYPING_LANGUAGES.CHINESE ? "CPM" : "WPM",
+    speed: isChineseLanguage(typingLanguage)
+      ? Math.round(correct / minutes)
+      : Math.round(correct / 5 / minutes),
+    speedUnit: isChineseLanguage(typingLanguage) ? "CPM" : "WPM",
     accuracy: attempts ? Math.round((correct / attempts) * 100) : 100,
   };
   const showSiteChrome = screen !== "game";

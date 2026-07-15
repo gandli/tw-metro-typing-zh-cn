@@ -1,5 +1,11 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { MetroMap } from "./MetroMap";
+import {
+  TYPING_LANGUAGES,
+  isChineseLanguage,
+  localizeStationName,
+  localizeText,
+} from "../lib/i18n";
 
 export function GameScreen({
   mapModel,
@@ -25,12 +31,35 @@ export function GameScreen({
   const trainProgress = targetCharacters.length
     ? typedIndex / targetCharacters.length
     : 0;
-  const isChinese = typingLanguage === "zh";
+  const isChinese = isChineseLanguage(typingLanguage);
+  // 打字目标语言的本地化名 (用于 SR 提示)
+  const targetName = isChinese
+    ? localizeStationName(station, typingLanguage)
+    : station.nameEn;
+  // 对照语言 (与 typing target 互补, 不重复)
+  // 中文档打字 → h2 显英文; 英文档打字 → h2 显繁体 (原始 TDX)
+  const oppositeName = isChinese
+    ? station.nameEn
+    : localizeStationName(station, TYPING_LANGUAGES.TRADITIONAL);
+  const oppositeNext = next
+    ? isChinese
+      ? next.nameEn
+      : localizeStationName(next, TYPING_LANGUAGES.TRADITIONAL)
+    : null;
+  // 语言 label (标注 h2 的语言)
+  const oppositeLabel = isChinese
+    ? "ENGLISH"
+    : typingLanguage === TYPING_LANGUAGES.ENGLISH
+      ? "中文站名"
+      : "中文站名";
+  // 终点站名 (用打字语言)
+  const terminalName = isChinese
+    ? localizeStationName(stations[stations.length - 1], typingLanguage)
+    : stations[stations.length - 1]?.nameEn;
   return (
     <section className="game" style={{ "--active-route": line.color }}>
       <p className="screen-reader-status" aria-live="polite" aria-atomic="true">
-        目前车站 {station.nameZh}，请输入{" "}
-        {isChinese ? station.nameZh : station.nameEn}
+        目前车站 {localizeStationName(station, typingLanguage)},请输入 {targetName}
       </p>
       <MetroMap
         mapModel={mapModel}
@@ -44,7 +73,7 @@ export function GameScreen({
           <ArrowLeft size={15} /> 返回选线 <kbd>ESC</kbd>
         </button>
         <div className="route-pill" style={{ background: line.color }}>
-          {line.lineName} · 往 {stations[stations.length - 1]?.nameZh}
+          {localizeText(line.lineName, typingLanguage)} · 往 {terminalName}
         </div>
       </div>
       <div className="scorebar">
@@ -68,16 +97,13 @@ export function GameScreen({
         <div className="station-main">
           <div>
             {/* label 标注 h2 显示的是哪种语言, 与 typing-target 语言互补 */}
-            <p>{isChinese ? "ENGLISH" : "中文站名"}</p>
-            {/* 双语同屏: h2 显示"另一种语言"的对照, 与 typing-target 互补不重复
-                中文模式打字时看英文名, 英文模式打字时看中文名 */}
-            <h2>{isChinese ? station.nameEn : station.nameZh}</h2>
+            <p>{oppositeLabel}</p>
+            {/* 双语同屏: h2 显示"另一种语言"的对照, 与 typing-target 互补不重复 */}
+            <h2>{oppositeName}</h2>
           </div>
           <div className={`next-station${next ? "" : " is-terminal"}`}>
             <span>{next ? "下一站" : "终点站"}</span>
-            <strong>
-              {next ? (isChinese ? next.nameEn : next.nameZh) : "本线终点"}
-            </strong>
+            <strong>{oppositeNext ?? "本线终点"}</strong>
             {next ? (
               <b>
                 <ArrowRight size={22} />
@@ -91,7 +117,7 @@ export function GameScreen({
             style={{
               "--fit-font": `calc((min(760px, 94vw) - 48px) / ${(targetCharacters.length * (isChinese ? 1 : 0.65)).toFixed(2)})`,
             }}
-            aria-label={`请输入 ${isChinese ? station.nameZh : station.nameEn}`}
+            aria-label={`请输入 ${targetName}`}
           >
             {targetCharacters.map((character, index) => (
               <span

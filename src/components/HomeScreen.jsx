@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { TaiwanMap } from "./TaiwanMap";
 import { getLineRuns, getPlayableStations, ROUTE_DIRECTIONS } from "../lib/map";
+import { localizeStationName, localizeText, TYPING_LANGUAGES } from "../lib/i18n";
 
 export function HomeScreen({
   data,
@@ -72,9 +73,9 @@ export function HomeScreen({
                 {selectedLine.lineId}
               </span>
               <div>
-                <h2>{selectedLine.lineName}</h2>
+                <h2>{localizeText(selectedLine.lineName, typingLanguage)}</h2>
                 <p>
-                  {selectedLine.operatorName} · {playableStations.length} 站
+                  {localizeText(selectedLine.operatorName, typingLanguage)} · {playableStations.length} 站
                 </p>
               </div>
             </div>
@@ -94,9 +95,9 @@ export function HomeScreen({
             >
               <span className="route-symbol">{line.lineId}</span>
               <span>
-                <strong>{line.lineName}</strong>
+                <strong>{localizeText(line.lineName, typingLanguage)}</strong>
                 <small>
-                  {line.operatorName} · {getPlayableStations(line).length} 站
+                  {localizeText(line.operatorName, typingLanguage)} · {getPlayableStations(line).length} 站
                 </small>
               </span>
             </button>
@@ -138,6 +139,7 @@ export function HomeScreen({
                 stations={selectedRun.stations}
                 value={direction}
                 onChange={onDirectionChange}
+                language={typingLanguage}
               />
             ) : null}
             <div className="option-toolbar">
@@ -169,9 +171,14 @@ export function HomeScreen({
   );
 }
 
-function DirectionPicker({ stations, value, onChange }) {
+function DirectionPicker({ stations, value, onChange, language }) {
   const firstStation = stations[0];
   const lastStation = stations[stations.length - 1];
+  // 按语言本地化站名: 英文档取 nameEn, 简/繁档取相应汉字形
+  const localize = (station) =>
+    language === TYPING_LANGUAGES.ENGLISH
+      ? station.nameEn
+      : localizeStationName(station, language);
   const options = [
     {
       value: ROUTE_DIRECTIONS.FORWARD,
@@ -202,9 +209,9 @@ function DirectionPicker({ stations, value, onChange }) {
               onChange={() => onChange(option.value)}
             />
             <span>
-              <small>从 {option.origin.nameZh}</small>
+              <small>从 {localize(option.origin)}</small>
               <b>
-                往 {option.destination.nameZh}
+                往 {localize(option.destination)}
                 <ArrowRight size={14} aria-hidden="true" />
               </b>
             </span>
@@ -217,7 +224,8 @@ function DirectionPicker({ stations, value, onChange }) {
 
 const LANGUAGE_OPTIONS = [
   { value: "en", label: "英文" },
-  { value: "zh", label: "中文" },
+  { value: "zh-Hans", label: "简体" },
+  { value: "zh-Hant", label: "繁體" },
 ];
 
 const GAME_MODE_OPTIONS = [

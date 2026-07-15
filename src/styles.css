@@ -684,6 +684,22 @@ body.dark .focus-actions .start-button {
   overflow: hidden;
   background: #efeee8;
 }
+/* 手势容器: 占满原 .metro-map 位置, 承载 pan/pinch/rotate 变换 */
+.metro-map-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: center center;
+  will-change: transform;
+  /* 默认无过渡, applyTransform(animated) 才临时启用 */
+  cursor: grab;
+  /* 缩放时 SVG stroke 需要 counter-scale 保持视觉粗细稳定 */
+  --map-scale: 1;
+}
+.metro-map-container:active {
+  cursor: grabbing;
+}
 .metro-map {
   position: absolute;
   inset: 0;
@@ -691,6 +707,49 @@ body.dark .focus-actions .start-button {
   height: 100%;
   opacity: var(--map-opacity);
   filter: var(--map-filter);
+  /* SVG 本身不接 pointer, 事件冒泡到 container */
+  pointer-events: none;
+  /* stroke 抵消缩放: 放大时线宽 / scale 保持视觉粗细 */
+  --stroke-adjust: calc(1 / var(--map-scale, 1));
+}
+/* 归位按钮 (data-visible 由 JS 控制) */
+.map-reset-btn {
+  position: absolute;
+  right: 12px;
+  top: calc(56px + 60px);  /* 让开 scorebar */
+  z-index: 8;
+  padding: 8px 14px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  font-size: 12px;
+  font-weight: 500;
+  color: #171719;
+  cursor: pointer;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  transform: translateY(-4px) scale(0.95);
+  pointer-events: none;
+  transition:
+    opacity 200ms ease,
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.map-reset-btn[data-visible="1"] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.map-reset-btn:active {
+  transform: scale(0.95);
+}
+.map-reset-btn span {
+  font-size: 14px;
+  color: #666;
 }
 .game-counties path {
   fill: #f7f4ed;

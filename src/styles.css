@@ -9,6 +9,8 @@
   --accent-dark: #d96a2a;
   --green: #b8d65a;
   --shadow: 0 22px 60px rgba(40, 35, 25, 0.12);
+  /* focus ring: 通用 keyboard focus 环 (2px 白 + 4px 品牌蓝, WCAG 3:1 ≥ passed) */
+  --focus-ring: 0 0 0 2px #ffffff, 0 0 0 4px #006bff;
 }
 
 * {
@@ -30,6 +32,34 @@ body {
 button,
 input {
   font: inherit;
+}
+
+/* ============================================================
+ * 全局 keyboard focus 环 (a11y P1 修复)
+ * ------------
+ * 覆盖所有可聚焦 interactive 元素. 只走 :focus-visible 避免鼠标点击后残留.
+ * 使用 --focus-ring token, 白色内环 + 品牌蓝外环, 对深浅背景都可见.
+ * 局部组件可用 outline: none + 自定义 box-shadow 覆盖.
+ * ============================================================ */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: inherit;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+/* input/textarea 保留原 border, 焦点态叠加 ring (不要覆盖 background) */
+input:focus-visible,
+textarea:focus-visible {
+  border-color: transparent;
 }
 
 .mobile-typing-input {
@@ -2070,11 +2100,7 @@ body.dark .secondary-button {
   /* ---- 结算屏 ---- */
   .result-screen { padding: 16px !important; }
 
-  /* ---- Geist focus ring (通用) ---- */
-  button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #006bff;
-  }
+  /* Geist focus ring 已提升到全局 :focus-visible, 用 --focus-ring token */
 
   /* ============================================================
    * 键盘弹起态 (body.kb-open, JS 通过 visualViewport 判定 kb>100px)

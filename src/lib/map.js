@@ -68,7 +68,7 @@ export function buildMapModel(topology, lines) {
   return { counties, routes };
 }
 
-export function getRouteViewBox(route, minimumWidth = 270, padding = 42) {
+export function getRouteViewBox(route, minimumWidth = 270, padding = 42, aspectRatio = 0.72) {
   if (!route) return MAP_VIEWBOX;
   const points = route.segments.flat();
   if (!points.length) return MAP_VIEWBOX;
@@ -78,8 +78,18 @@ export function getRouteViewBox(route, minimumWidth = 270, padding = 42) {
   const maxX = Math.max(...xs);
   const minY = Math.min(...ys);
   const maxY = Math.max(...ys);
-  const width = Math.max(maxX - minX + padding * 2, minimumWidth);
-  const height = Math.max(maxY - minY + padding * 2, width * 0.72);
+  const rawW = maxX - minX + padding * 2;
+  const rawH = maxY - minY + padding * 2;
+  // 让 viewBox aspect (height/width) 匹配容器, 避免 preserveAspectRatio=meet 缩小路线
+  // aspectRatio = 容器 height/width; 若 rawH/rawW < aspectRatio, 拉高 viewBox; 反之拉宽
+  let width, height;
+  if (rawH / rawW < aspectRatio) {
+    width = Math.max(rawW, minimumWidth);
+    height = width * aspectRatio;
+  } else {
+    height = rawH;
+    width = Math.max(height / aspectRatio, minimumWidth);
+  }
   return [(minX + maxX - width) / 2, (minY + maxY - height) / 2, width, height];
 }
 

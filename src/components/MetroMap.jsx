@@ -27,7 +27,12 @@ export function MetroMap({
   language,
 }) {
   const route = mapModel.routes.find((item) => item.id === selectedLine.id);
-  const routeViewBox = getRouteViewBox(route, 44, 7);
+  // 视口自适应 viewBox aspect: 手机竖屏容器高比宽 ~1.5, 桌面横屏 ~0.72
+  // 让 viewBox 主动匹配容器 aspect, 路线渲染时不再被 preserveAspectRatio=meet 压缩
+  const isPortrait =
+    typeof window !== "undefined" && window.innerHeight > window.innerWidth;
+  const containerAspect = isPortrait ? 1.5 : 0.72;
+  const routeViewBox = getRouteViewBox(route, 6, 3, containerAspect);
   routeViewBox[1] += routeViewBox[3] * 0.16;
   const viewBox = routeViewBox.join(" ");
   const nextIndex =

@@ -10,9 +10,14 @@ export const TaiwanMap = memo(function TaiwanMap({
   const [intro, setIntro] = useState(true);
   const selectedRoute =
     mapModel.routes.find((route) => route.id === selectedLineId) ?? null;
+  // 视口自适应 viewBox aspect: 手机竖屏容器高比宽 ~1.5, 桌面横屏 ~0.72
+  // 修 focused 状态下路线被压成中央小坨的问题 (对齐 MetroMap.jsx 的处理)
+  const isPortrait =
+    typeof window !== "undefined" && window.innerHeight > window.innerWidth;
+  const targetAspect = isPortrait ? 1.5 : 0.72;
   const targetViewBox = useMemo(
-    () => getRouteViewBox(selectedRoute, 46, 9),
-    [selectedRoute],
+    () => getRouteViewBox(selectedRoute, 8, 4, targetAspect),
+    [selectedRoute, targetAspect],
   );
 
   useEffect(() => {

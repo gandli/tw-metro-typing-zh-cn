@@ -82,3 +82,24 @@ test.describe("桌面端地图 aspect 保持横屏", () => {
     expect(h / w).toBeLessThanOrEqual(0.9);
   });
 });
+
+test.describe("focused 状态地图路线可见性 (HomeScreen)", () => {
+  test.beforeEach(async ({}, testInfo) => {
+    test.skip(testInfo.project.name !== "mobile-iphone", "手机端专用");
+  });
+
+  test("selected 后 taiwan-map viewBox aspect 应匹配竖屏 (h/w ≥ 1.3)", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForSelector(".route-carousel .route-button", { timeout: 15_000 });
+    // 直接点第一条线路 (未 start), 进入 focused 状态
+    await page.locator(".route-carousel .route-button").first().click();
+    // 等 TaiwanMap viewBox transition 收敛 (rAF 680ms)
+    await page.waitForTimeout(900);
+    const viewBox = await page.locator("svg.taiwan-map").getAttribute("viewBox");
+    expect(viewBox).not.toBeNull();
+    const [, , w, h] = viewBox.split(/\s+/).map(Number);
+    expect(h / w).toBeGreaterThanOrEqual(1.3);
+    // viewBox 宽应紧贴路线 bbox (文湖线 rawW ~11.5), 不再被 46 minimumWidth 强制拉大
+    expect(w).toBeLessThan(35);
+  });
+});

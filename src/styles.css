@@ -1529,9 +1529,9 @@ body.dark .secondary-button {
     padding-inline: 10px;
     min-width: 0;   /* flex child 允许收缩, 避免撑出容器 */
     overflow: hidden;
+    align-items: center !important;  /* 左卡 2 行 右卡 3 行时垂直居中对齐 */
   }
   .direction-options {
-    /* 两卡等分, 各占一半宽度, 不允许溢出 */
     display: grid !important;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
@@ -1541,8 +1541,10 @@ body.dark .secondary-button {
     min-width: 0;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 2px;
     overflow: hidden;
+    width: 100%;
   }
   .direction-option small,
   .direction-option b {

@@ -1578,3 +1578,234 @@ body.dark .secondary-button {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ============================================================
+ * 移动端适配 (max-width: 640px)
+ * ----------
+ * 桌面版为 desktop-first, 全 absolute 定位 + 地图铺满背景;
+ * 手机版改为流式布局 + 大触控目标 (≥44px) + 可见输入框.
+ * 遵循 Geist design system 规范:
+ *  - spacing: 4/8/12/16/24
+ *  - control height: 40/48px
+ *  - radius: 6/12/16
+ *  - focus ring: 双层 outline + blue-700
+ *  - motion: 150ms cubic-bezier(0.175, 0.885, 0.32, 1.1)
+ * ============================================================ */
+@media (max-width: 640px) {
+  /* ---- 全局 ---- */
+  html { -webkit-text-size-adjust: 100%; }
+  .topbar {
+    padding: 8px 16px !important;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--paper) 96%, transparent);
+    backdrop-filter: blur(8px);
+  }
+  .brand span { font-size: 13px !important; }
+  .icon-button { min-width: 44px; min-height: 44px; }
+
+  /* ---- 首页地图 → 流式布局 ---- */
+  .home-map-screen {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100dvh - 60px);
+    overflow: visible;
+    padding: 16px 16px 24px;
+    gap: 16px;
+  }
+  /* 手机端隐藏台湾整体地图 (点不准, 认知负担大); 用大按钮列表代替 */
+  .taiwan-map { display: none; }
+  .home-copy {
+    position: static !important;
+    max-width: 100%;
+    padding: 8px 4px 0;
+    margin: 0 !important;
+    transform: none !important;
+  }
+  .home-copy .eyebrow { font-size: 11px; }
+  .home-copy h1 { font-size: 26px !important; line-height: 1.2; margin: 8px 0 !important; }
+  .home-copy .lede { font-size: 14px !important; line-height: 1.5; }
+  .home-instruction { display: none; }
+  /* focused 状态 (选路线后) 直接隐藏 home-copy 让位控制面板 */
+  .home-map-screen.focused .home-copy { display: none; }
+
+  /* ---- route-carousel → 手机竖排大按钮列表 ---- */
+  .home-control-deck {
+    position: static !important;
+    width: 100% !important;
+    transform: none !important;
+    padding: 0;
+  }
+  .route-carousel {
+    flex-direction: column;
+    gap: 8px;
+    padding: 4px 0 !important;
+    overflow: visible;
+  }
+  .route-button {
+    width: 100%;
+    min-height: 56px !important;
+    padding: 12px 16px !important;
+    border-radius: 12px !important;
+  }
+  .route-button:first-child,
+  .route-button:last-child { margin: 0 !important; }
+  .route-button strong { font-size: 15px !important; }
+  .route-button small { font-size: 11px !important; margin-top: 4px !important; }
+  .route-button.selected { transform: none !important; }
+
+  /* ---- focus-actions 选中路线后的选项面板 ---- */
+  .route-focus-card { position: static !important; padding: 12px 16px !important; }
+  .focus-actions {
+    width: 100% !important;
+    margin: 8px 0 0 !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 2px rgba(0,0,0,0.04);
+  }
+
+  /* ---- 游戏页 → 流式竖排 ----
+     软键盘弹出时通过 sticky + max-height 让关键区 (站名 + 打字目标) 常驻可视,
+     地图/装饰性区块被键盘覆盖不影响 usability */
+  .game {
+    --game-card-height: auto !important;
+    min-height: 100dvh;
+    /* 键盘弹起时把 game 容器最大高度限制在 visualViewport, 避免超出可见区 */
+    max-height: calc(100dvh - var(--kb-h, 0px));
+    /* 底部留 76px = input 48 + 上下 padding 12+16, 避免 fixed input 遮 card 尾部 */
+    padding: 12px 12px 76px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+  .metro-map { display: none; }
+  .game-chrome {
+    position: static !important;
+    padding: 0 !important;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .back-button {
+    min-height: 44px;
+    padding: 10px 14px !important;
+    font-size: 14px;
+    border-radius: 12px !important;
+  }
+  .back-button kbd { display: none; }
+  .route-pill {
+    min-height: 40px;
+    padding: 8px 14px !important;
+    font-size: 12px !important;
+    max-width: 100%;
+  }
+  .scorebar {
+    position: static !important;
+    transform: none !important;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+    border-radius: 12px !important;
+    overflow: hidden;
+  }
+  .scorebar > div {
+    min-width: 0 !important;
+    padding: 8px 4px !important;
+    border-right: 1px solid rgba(22,22,25,0.10);
+  }
+  .scorebar strong { font-size: 18px !important; }
+  .scorebar small { font-size: 10px; }
+  .scorebar span { font-size: 9px; margin-left: 2px; }
+
+  .station-card {
+    position: sticky !important;
+    top: 8px;
+    z-index: 5;
+    width: 100% !important;
+    height: auto !important;
+    grid-template-rows: none !important;
+    display: flex !important;
+    flex-direction: column;
+    padding: 12px 16px 4px !important;
+    border-radius: 16px !important;
+    gap: 8px;
+  }
+  .station-meta {
+    padding: 0 !important;
+    grid-template-columns: 1fr auto;
+  }
+  .station-main {
+    flex-direction: column;
+    align-items: stretch !important;
+    padding: 4px 0 8px !important;
+    gap: 12px;
+  }
+  .station-main h2 { font-size: 32px !important; letter-spacing: -0.04em; }
+  .next-station { text-align: left !important; }
+  .next-station b { display: none !important; }
+  .typing-area {
+    padding: 12px 0 4px;
+  }
+  .typing-target {
+    padding: 4px 0 !important;
+    font-size: clamp(20px, 6vw, 28px) !important;
+    flex-wrap: wrap;
+    white-space: normal !important;
+    justify-content: center;
+    line-height: 1.4;
+  }
+  .line-strip { display: none; }
+
+  /* ---- ★ 关键: mobile-typing-input 变可见输入框 ---- */
+  /* 桌面版隐藏 (opacity:0, h:2px, z:-1) 靠捕获物理键盘;
+     手机没物理键盘, 必须暴露可点击的输入框以唤起软键盘.
+     软键盘弹起时用 --kb-h (JS 从 visualViewport 计算) 顶开, 确保输入框可见 */
+  .mobile-typing-input {
+    position: fixed !important;
+    left: 50% !important;
+    bottom: calc(12px + var(--kb-h, 0px)) !important;
+    transform: translateX(-50%) !important;
+    z-index: 30 !important;
+    height: 48px !important;
+    width: calc(100% - 24px) !important;
+    max-width: 640px;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    padding: 0 16px !important;
+    margin: 8px 12px 0 !important;
+    border: 1.5px solid var(--active-route, #171717) !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    color: var(--ink, #171717) !important;
+    font-size: 16px !important;  /* iOS 16px 才不缩放 */
+    text-align: center !important;
+    box-shadow: 0 2px 2px rgba(0,0,0,0.04);
+  }
+  .mobile-typing-input:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #006bff;
+  }
+  /* game 页面之外不显示 (首页/结算不需要输入框可见) */
+  body:not(.game-active) .mobile-typing-input {
+    position: fixed !important;
+    height: 2px !important;
+    width: 1px !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* ---- 结算屏 ---- */
+  .result-screen { padding: 16px !important; }
+
+  /* ---- Geist focus ring (通用) ---- */
+  button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #006bff;
+  }
+}

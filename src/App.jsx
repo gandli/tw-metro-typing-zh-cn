@@ -75,6 +75,30 @@ export default function App() {
     document.body.classList.toggle("dark", dark);
   }, [dark]);
 
+  // 移动端: 进入 game 页给 body 加 .game-active (让隐藏 input 变可见输入框);
+  // 同时监听 visualViewport 实时暴露软键盘高度到 CSS var --kb-h, 供 sticky 布局用
+  useEffect(() => {
+    document.body.classList.toggle("game-active", screen === "game");
+    if (screen !== "game") {
+      document.documentElement.style.removeProperty("--kb-h");
+      return;
+    }
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const sync = () => {
+      const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      document.documentElement.style.setProperty("--kb-h", `${kb}px`);
+    };
+    sync();
+    vv.addEventListener("resize", sync);
+    vv.addEventListener("scroll", sync);
+    return () => {
+      vv.removeEventListener("resize", sync);
+      vv.removeEventListener("scroll", sync);
+      document.documentElement.style.removeProperty("--kb-h");
+    };
+  }, [screen]);
+
   const resetTypingInput = useCallback(() => {
     isComposingRef.current = false;
     if (typingInputRef.current) typingInputRef.current.value = "";

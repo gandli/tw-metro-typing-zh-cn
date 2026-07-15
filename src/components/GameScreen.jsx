@@ -1,5 +1,12 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { MetroMap } from "./MetroMap";
+import {
+  TYPING_LANGUAGES,
+  isChineseLanguage,
+  localizeStationName,
+  localizeText,
+  t,
+} from "../lib/i18n";
 
 export function GameScreen({
   mapModel,
@@ -19,18 +26,34 @@ export function GameScreen({
   onBack,
   onFocusTyping,
 }) {
+  const lang = typingLanguage;
   const station = stations[stationIndex];
   const next = stations[stationIndex + 1] ?? null;
   const targetCharacters = [...target];
   const trainProgress = targetCharacters.length
     ? typedIndex / targetCharacters.length
     : 0;
-  const isChinese = typingLanguage === "zh";
+  const isChinese = isChineseLanguage(lang);
+  const targetName = isChinese
+    ? localizeStationName(station, lang)
+    : station.nameEn;
+  // 对照语言 (与 typing target 互补): 中文档 → 英文, 英文档 → 繁体
+  const oppositeName = isChinese
+    ? station.nameEn
+    : localizeStationName(station, TYPING_LANGUAGES.TRADITIONAL);
+  const oppositeNext = next
+    ? isChinese
+      ? next.nameEn
+      : localizeStationName(next, TYPING_LANGUAGES.TRADITIONAL)
+    : null;
+  const oppositeLabel = isChinese ? t("labelEn", lang) : t("labelZh", lang);
+  const terminalName = isChinese
+    ? localizeStationName(stations[stations.length - 1], lang)
+    : stations[stations.length - 1]?.nameEn;
   return (
     <section className="game" style={{ "--active-route": line.color }}>
       <p className="screen-reader-status" aria-live="polite" aria-atomic="true">
-        目前车站 {station.nameZh}，请输入{" "}
-        {isChinese ? station.nameZh : station.nameEn}
+        {t("nowArriving", lang)} {localizeStationName(station, lang)}, {t("pleaseType", lang)} {targetName}
       </p>
       <MetroMap
         mapModel={mapModel}
@@ -38,24 +61,31 @@ export function GameScreen({
         stations={stations}
         stationIndex={stationIndex}
         trainProgress={trainProgress}
+        language={lang}
       />
       <div className="game-chrome">
         <button className="back-button" type="button" onClick={onBack}>
-          <ArrowLeft size={15} /> 返回选线 <kbd>ESC</kbd>
+          <ArrowLeft size={15} /> {t("back", lang)} <kbd>ESC</kbd>
         </button>
         <div className="route-pill" style={{ background: line.color }}>
-          {line.lineName} · 往 {stations[stations.length - 1]?.nameZh}
+          <span className="route-pill-name">
+            {localizeText(line.lineName, lang)}
+          </span>
+          <span className="route-pill-sep">·</span>
+          <span className="route-pill-dir">
+            {t("to", lang)} {terminalName}
+          </span>
         </div>
       </div>
       <div className="scorebar">
         <Metric
-          label={mode === "timed" ? "剩余" : "经过"}
+          label={mode === "timed" ? t("remaining", lang) : t("elapsed", lang)}
           value={mode === "timed" ? remaining : elapsed}
-          unit="秒"
+          unit={t("seconds", lang)}
         />
-        <Metric label="到站" value={completed} unit="站" />
-        <Metric label="速度" value={metrics.speed} unit={metrics.speedUnit} />
-        <Metric label="正确率" value={metrics.accuracy} unit="%" />
+        <Metric label={t("arrived", lang)} value={completed} unit={t("station", lang)} />
+        <Metric label={t("speed", lang)} value={metrics.speed} unit={metrics.speedUnit} />
+        <Metric label={t("accuracy", lang)} value={metrics.accuracy} unit="%" />
       </div>
       <article
         className={`station-card${shake ? " shake" : ""}`}
@@ -67,12 +97,12 @@ export function GameScreen({
         </div>
         <div className="station-main">
           <div>
-            <p>NOW ARRIVING</p>
-            <h2>{station.nameZh}</h2>
+            <p>{oppositeLabel}</p>
+            <h2>{oppositeName}</h2>
           </div>
           <div className={`next-station${next ? "" : " is-terminal"}`}>
-            <span>{next ? "下一站" : "终点站"}</span>
-            <strong>{next?.nameZh ?? "本线终点"}</strong>
+            <span>{next ? t("nextStation", lang) : t("terminal", lang)}</span>
+            <strong>{oppositeNext ?? t("routeEnd", lang)}</strong>
             {next ? (
               <b>
                 <ArrowRight size={22} />
@@ -86,7 +116,7 @@ export function GameScreen({
             style={{
               "--fit-font": `calc((min(760px, 94vw) - 48px) / ${(targetCharacters.length * (isChinese ? 1 : 0.65)).toFixed(2)})`,
             }}
-            aria-label={`请输入 ${isChinese ? station.nameZh : station.nameEn}`}
+            aria-label={`${t("pleaseType", lang)} ${targetName}`}
           >
             {targetCharacters.map((character, index) => (
               <span
@@ -110,21 +140,21 @@ export function GameScreen({
             >
               {compositionText ? (
                 <>
-                  选字中 · <strong>{compositionText}</strong>
+                  {t("composing", lang)} · <strong>{compositionText}</strong>
                 </>
               ) : (
-                "使用输入法选字"
+                t("useIme", lang)
               )}
             </p>
           ) : (
             <span id="typing-instruction" className="screen-reader-status">
-              直接输入画面上的英文站名
+              {t("typeEnglish", lang)}
             </span>
           )}
         </div>
         <div className="line-strip">
           <i />
-          <span>{line.lineName}</span>
+          <span>{localizeText(line.lineName, lang)}</span>
         </div>
       </article>
     </section>

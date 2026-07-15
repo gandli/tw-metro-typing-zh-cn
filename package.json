@@ -18,6 +18,7 @@
     "sync": "node scripts/sync-tdx.mjs"
   },
   "dependencies": {
+    "@use-gesture/react": "^10.3.1",
     "d3-geo": "^3.1.1",
     "lucide-react": "^1.24.0",
     "opencc-js": "^1.4.1",

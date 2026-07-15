@@ -15,6 +15,7 @@ import {
   normalizeCommittedText,
   TYPING_LANGUAGES,
 } from "./lib/typing";
+import { isChineseLanguage, t as tr } from "./lib/i18n";
 
 const TIMED_MS = 30000;
 
@@ -62,11 +63,10 @@ export default function App() {
   const minutes = Math.max(elapsedMs, 2000) / 60000;
   const metrics = {
     // Clamp to 2s so the first keystrokes don't show an absurd spike.
-    speed:
-      typingLanguage === TYPING_LANGUAGES.CHINESE
-        ? Math.round(correct / minutes)
-        : Math.round(correct / 5 / minutes),
-    speedUnit: typingLanguage === TYPING_LANGUAGES.CHINESE ? "CPM" : "WPM",
+    speed: isChineseLanguage(typingLanguage)
+      ? Math.round(correct / minutes)
+      : Math.round(correct / 5 / minutes),
+    speedUnit: isChineseLanguage(typingLanguage) ? "CPM" : "WPM",
     accuracy: attempts ? Math.round((correct / attempts) * 100) : 100,
   };
   const showSiteChrome = screen !== "game";
@@ -74,6 +74,33 @@ export default function App() {
   useEffect(() => {
     document.body.classList.toggle("dark", dark);
   }, [dark]);
+
+  // 移动端: 进入 game 页给 body 加 .game-active (让隐藏 input 变可见输入框);
+  // 同时监听 visualViewport 实时暴露软键盘高度到 CSS var --kb-h, 供 sticky 布局用
+  useEffect(() => {
+    document.body.classList.toggle("game-active", screen === "game");
+    if (screen !== "game") {
+      document.documentElement.style.removeProperty("--kb-h");
+      return;
+    }
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const sync = () => {
+      const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      document.documentElement.style.setProperty("--kb-h", `${kb}px`);
+      // 键盘弹起 (>100px 阈值) 时标记 body, CSS 用于精简小视口 UI
+      document.body.classList.toggle("kb-open", kb > 100);
+    };
+    sync();
+    vv.addEventListener("resize", sync);
+    vv.addEventListener("scroll", sync);
+    return () => {
+      vv.removeEventListener("resize", sync);
+      vv.removeEventListener("scroll", sync);
+      document.documentElement.style.removeProperty("--kb-h");
+      document.body.classList.remove("kb-open");
+    };
+  }, [screen]);
 
   const resetTypingInput = useCallback(() => {
     isComposingRef.current = false;
@@ -304,16 +331,35 @@ export default function App() {
             className="brand"
             type="button"
             onClick={backToHome}
-            aria-label="回到首页"
+            aria-label={tr("brandBack", typingLanguage)}
           >
             <span>TAIWAN METRO TYPING</span>
           </button>
           <div className="top-actions">
             <button
+              className="icon-button lang-cycle"
+              type="button"
+              aria-label={tr("langLabel", typingLanguage)}
+              onClick={() => {
+                const order = ["en", "zh-Hans", "zh-Hant"];
+                const next = order[(order.indexOf(typingLanguage) + 1) % 3];
+                setTypingLanguage(next);
+              }}
+              title={tr("langLabel", typingLanguage)}
+            >
+              <span className="lang-tag">
+                {typingLanguage === "en"
+                  ? "EN"
+                  : typingLanguage === "zh-Hans"
+                    ? "简"
+                    : "繁"}
+              </span>
+            </button>
+            <button
               className="icon-button"
               type="button"
               aria-pressed={dark}
-              aria-label="切换深色模式"
+              aria-label={tr("themeToggle", typingLanguage) || "切换深色模式"}
               onClick={() => setDark((value) => !value)}
             >
               {dark ? <Sun size={17} /> : <Moon size={17} />}
@@ -326,7 +372,7 @@ export default function App() {
         {!error && (!data || !mapModel) ? (
           <div className="loading">
             <span />
-            正在载入台湾路网…
+            {tr("loading", typingLanguage)}
           </div>
         ) : null}
         {data && mapModel && screen === "home" ? (

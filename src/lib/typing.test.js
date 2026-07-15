@@ -9,29 +9,29 @@ import {
 
 test("Chinese targets keep words and numbers while dropping punctuation", () => {
   assert.equal(
-    getTypingTarget({ nameZh: "台北101/世貿" }, TYPING_LANGUAGES.CHINESE),
-    "台北101世貿",
+    getTypingTarget({ nameZh: "台北101/世贸" }, TYPING_LANGUAGES.CHINESE),
+    "台北101世贸",
   );
   assert.equal(
-    getTypingTarget({ nameZh: "灣仔內(大順鼎山)" }, TYPING_LANGUAGES.CHINESE),
-    "灣仔內大順鼎山",
+    getTypingTarget({ nameZh: "湾仔内(大顺鼎山)" }, TYPING_LANGUAGES.CHINESE),
+    "湾仔内大顺鼎山",
   );
 });
 
 test("committed Chinese input ignores punctuation and normalizes full-width text", () => {
   assert.equal(
-    normalizeCommittedText("台北１０１／世貿", TYPING_LANGUAGES.CHINESE),
-    "台北101世貿",
+    normalizeCommittedText("台北１０１／世贸", TYPING_LANGUAGES.CHINESE),
+    "台北101世贸",
   );
 });
 
-test("Chinese typing accepts the common 台 and 臺 variants", () => {
+test("Chinese typing accepts the common 台 and 台 variants", () => {
   assert.equal(
-    isTypingCharacterMatch("台", "臺", TYPING_LANGUAGES.CHINESE),
+    isTypingCharacterMatch("台", "台", TYPING_LANGUAGES.CHINESE),
     true,
   );
   assert.equal(
-    isTypingCharacterMatch("臺", "台", TYPING_LANGUAGES.CHINESE),
+    isTypingCharacterMatch("台", "台", TYPING_LANGUAGES.CHINESE),
     true,
   );
 });

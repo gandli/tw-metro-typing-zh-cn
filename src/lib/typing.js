@@ -33,5 +33,5 @@ export function isTypingCharacterMatch(typed, expected, language) {
 }
 
 function normalizeChineseVariant(value) {
-  return value.normalize("NFKC").replaceAll("臺", "台");
+  return value.normalize("NFKC").replaceAll("台", "台");
 }

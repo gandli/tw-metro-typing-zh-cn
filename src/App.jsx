@@ -289,8 +289,8 @@ export default function App() {
         spellCheck={false}
         aria-label={
           typingLanguage === TYPING_LANGUAGES.CHINESE
-            ? "中文站名輸入"
-            : "英文站名輸入"
+            ? "中文站名输入"
+            : "英文站名输入"
         }
         aria-describedby={screen === "game" ? "typing-instruction" : undefined}
         onInput={handleTypingInput}
@@ -304,7 +304,7 @@ export default function App() {
             className="brand"
             type="button"
             onClick={backToHome}
-            aria-label="回到首頁"
+            aria-label="回到首页"
           >
             <span>TAIWAN METRO TYPING</span>
           </button>
@@ -313,7 +313,7 @@ export default function App() {
               className="icon-button"
               type="button"
               aria-pressed={dark}
-              aria-label="切換深色模式"
+              aria-label="切换深色模式"
               onClick={() => setDark((value) => !value)}
             >
               {dark ? <Sun size={17} /> : <Moon size={17} />}
@@ -326,7 +326,7 @@ export default function App() {
         {!error && (!data || !mapModel) ? (
           <div className="loading">
             <span />
-            正在載入台灣路網…
+            正在载入台湾路网…
           </div>
         ) : null}
         {data && mapModel && screen === "home" ? (
@@ -397,7 +397,7 @@ export default function App() {
           <div className="footer-meta">
             <p>
               <span className="footer-label">DATA</span>
-              地圖{" "}
+              地图{" "}
               <a
                 href="https://taiwan.md/taiwan-shape/"
                 target="_blank"
@@ -406,13 +406,13 @@ export default function App() {
                 Taiwan.md
               </a>
               <span className="footer-sep">·</span>
-              站點{" "}
+              站点{" "}
               <a
                 href="https://tdx.transportdata.tw/"
                 target="_blank"
                 rel="noreferrer"
               >
-                TDX 運輸資料流通服務
+                TDX 运输资料流通服务
               </a>
             </p>
             <p>
@@ -439,10 +439,10 @@ export default function App() {
 function DataError({ message }) {
   return (
     <div className="data-error">
-      <strong>地圖資料載入失敗</strong>
+      <strong>地图资料载入失败</strong>
       <span>{message}</span>
       <button type="button" onClick={() => location.reload()}>
-        重新載入
+        重新载入
       </button>
     </div>
   );

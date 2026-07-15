@@ -41,26 +41,26 @@ export function HomeScreen({
           <span /> REAL ROUTES · REAL STATIONS
         </div>
         <h1>
-          一站一站，<em>越打越順。</em>
+          一站一站，<em>越打越顺。</em>
         </h1>
         <p className="lede">
-          在真實台灣地圖上選擇路線，沿著精確站點位置完成英文或中文站名。每打對一個字，列車就會往下一站前進一段。
+          在真实台湾地图上选择路线，沿著精确站点位置完成英文或中文站名。每打对一个字，列车就会往下一站前进一段。
         </p>
         <div className="home-instruction">
           <b>01</b>
-          <span>從地圖或下方路線列選擇路線</span>
+          <span>从地图或下方路线列选择路线</span>
         </div>
         <span className="data-status">
-          {data.lines.length} 條路線 ·{" "}
+          {data.lines.length} 条路线 ·{" "}
           {data.lines.reduce((sum, line) => sum + line.stations.length, 0)}{" "}
-          筆站點座標
+          笔站点座标
         </span>
       </div>
 
       {selectedLine ? (
         <>
           <button className="map-reset" type="button" onClick={onReset}>
-            <ArrowLeft size={15} /> 返回台灣全圖 <kbd>ESC</kbd>
+            <ArrowLeft size={15} /> 返回台湾全图 <kbd>ESC</kbd>
           </button>
           <div className="route-focus-card" aria-live="polite">
             <span className="focus-kicker">SELECTED ROUTE</span>
@@ -83,7 +83,7 @@ export function HomeScreen({
       ) : null}
 
       <div className="home-control-deck">
-        <div className="route-carousel" aria-label="可選擇的捷運路線">
+        <div className="route-carousel" aria-label="可选择的捷运路线">
           {data.lines.map((line) => (
             <button
               key={line.id}
@@ -109,8 +109,8 @@ export function HomeScreen({
             style={{ "--focus-color": selectedLine.color }}
           >
             {runs.length > 1 ? (
-              <div className="run-picker" aria-label="選擇行駛區間">
-                <span className="control-label">區間</span>
+              <div className="run-picker" aria-label="选择行驶区间">
+                <span className="control-label">区间</span>
                 <div className="run-options">
                   {runs.map((run, index) => (
                     <label
@@ -156,7 +156,7 @@ export function HomeScreen({
                 options={GAME_MODE_OPTIONS}
               />
               <button className="start-button" type="button" onClick={onStart}>
-                <span>開始這條路線</span>
+                <span>开始这条路线</span>
                 <b>
                   <ArrowRight size={20} />
                 </b>
@@ -186,7 +186,7 @@ function DirectionPicker({ stations, value, onChange }) {
   ];
 
   return (
-    <div className="direction-picker" role="radiogroup" aria-label="行駛方向">
+    <div className="direction-picker" role="radiogroup" aria-label="行驶方向">
       <span className="control-label">方向</span>
       <div className="direction-options">
         {options.map((option) => (
@@ -202,7 +202,7 @@ function DirectionPicker({ stations, value, onChange }) {
               onChange={() => onChange(option.value)}
             />
             <span>
-              <small>從 {option.origin.nameZh}</small>
+              <small>从 {option.origin.nameZh}</small>
               <b>
                 往 {option.destination.nameZh}
                 <ArrowRight size={14} aria-hidden="true" />
@@ -222,7 +222,7 @@ const LANGUAGE_OPTIONS = [
 
 const GAME_MODE_OPTIONS = [
   { value: "timed", label: "30 秒" },
-  { value: "line", label: "全線" },
+  { value: "line", label: "全线" },
 ];
 
 function SegmentedControl({ label, name, value, onChange, options }) {

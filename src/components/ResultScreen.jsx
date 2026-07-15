@@ -12,14 +12,14 @@ export function ResultScreen({
     <section className="results" style={{ "--result-route": routeColor }}>
       <div className="result-card">
         <span className="result-kicker">JOURNEY COMPLETE</span>
-        <h2>這班車，跑得很順。</h2>
+        <h2>这班车，跑得很顺。</h2>
         <p>
-          你在 {elapsed} 秒內通過了 {completed} 個車站。
+          你在 {elapsed} 秒内通过了 {completed} 个车站。
         </p>
         <div className="result-metrics">
           <div>
             <strong>{completed}</strong>
-            <span>通過站數</span>
+            <span>通过站数</span>
           </div>
           <div>
             <strong>{metrics.speed}</strong>
@@ -27,12 +27,12 @@ export function ResultScreen({
           </div>
           <div>
             <strong>{metrics.accuracy}%</strong>
-            <span>正確率</span>
+            <span>正确率</span>
           </div>
         </div>
         <div className="result-actions">
           <button className="secondary-button" type="button" onClick={onBack}>
-            重新選線
+            重新选线
           </button>
           <button className="start-button" type="button" onClick={onRetry}>
             <span>再跑一次</span>

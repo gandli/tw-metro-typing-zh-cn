@@ -63,7 +63,7 @@ export const TaiwanMap = memo(function TaiwanMap({
       className={`taiwan-map${intro ? " intro" : ""}`}
       viewBox={MAP_VIEWBOX.join(" ")}
       role="img"
-      aria-label="依真實經緯度繪製的台灣捷運路線地圖"
+      aria-label="依真实经纬度绘制的台湾捷运路线地图"
     >
       <defs>
         <filter id="island-shadow" x="-40%" y="-30%" width="180%" height="180%">
@@ -122,7 +122,7 @@ export const TaiwanMap = memo(function TaiwanMap({
               style={{ "--draw-delay": `${routeDelay.toFixed(2)}s` }}
               role="button"
               tabIndex={0}
-              aria-label={`選擇${route.lineName}`}
+              aria-label={`选择${route.lineName}`}
               onClick={() => onSelect(route.id)}
               onKeyDown={(event) => {
                 if (event.key === "Enter" || event.key === " ") {

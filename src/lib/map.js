@@ -7,7 +7,7 @@ export const ROUTE_DIRECTIONS = {
   REVERSE: "reverse",
 };
 const OFFSHORE_COUNTIES = new Set(["09007", "09020", "10016"]);
-// Fit the projection to Taiwan proper; remote islets (e.g. 釣魚台) would otherwise shrink the main island.
+// Fit the projection to Taiwan proper; remote islets (e.g. 钓鱼台) would otherwise shrink the main island.
 const TAIWAN_MAIN_BOUNDS = {
   type: "Polygon",
   coordinates: [
@@ -88,7 +88,7 @@ export function pointsToString(points) {
 }
 
 // Each entry in line.segments is a real service pattern (trunk or branch),
-// e.g. 中和新蘆線 has 南勢角→迴龍 and 南勢角→蘆洲.
+// e.g. 中和新芦线 has 南势角→回龙 and 南势角→芦洲.
 export function getLineRuns(line) {
   if (!line) return [];
   const stationById = new Map(

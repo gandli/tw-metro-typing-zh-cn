@@ -1768,8 +1768,27 @@ body.dark .secondary-button {
     padding: 16px 16px 24px;
     gap: 16px;
   }
-  /* 手机端隐藏台湾整体地图 (点不准, 认知负担大); 用大按钮列表代替 */
+  /* 手机端隐藏台湾整体地图 (点不准, 认知负担大); 用大按钮列表代替.
+     focused 状态例外: 让 SVG 重新显示, 但改为流式布局 (非 absolute),
+     插在 route-focus-card 和 route-carousel 之间, 各组件互不遮挡. */
   .taiwan-map { display: none; }
+  .home-map-screen.focused .taiwan-map {
+    display: block;
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: 220px !important;
+    /* route-focus-card 是 absolute 浮层 (top:62 + h:~96 = 底部约 y:158),
+       给 SVG top 加 padding-top 让开它 (section 已 padding-top:16, 再加 150 让开卡片).
+       home-copy focused opacity:0 但用 display:none 需在下面单独设 */
+    margin: 150px 0 0 !important;
+    order: 0;
+    z-index: 1;
+    pointer-events: none;
+    flex: 0 0 220px;             /* 固定高度不参与 flex 拉伸 */
+  }
+  /* focused 时把占位元素 display:none, 避免抢 flex 空间 */
+  .home-map-screen.focused .home-copy { display: none !important; }
   .home-copy {
     position: static !important;
     max-width: 100%;

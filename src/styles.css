@@ -1773,10 +1773,10 @@ body.dark .secondary-button {
      order: 卡片(1) → 地图(2) → 控制组(3), 各组件互不遮挡. */
   .taiwan-map { display: none; }
   .home-map-screen.focused {
-    padding: 12px 12px 16px !important;
-    gap: 10px !important;
+    padding: 12px 12px 12px !important;
+    gap: 6px !important;
     min-height: 0 !important;
-    height: calc(100dvh - 60px) !important;   /* 顶栏外, 一屏内 */
+    height: calc(100dvh - 60px) !important;
     max-height: calc(100dvh - 60px) !important;
     overflow: hidden !important;
   }
@@ -1788,9 +1788,8 @@ body.dark .secondary-button {
     height: auto !important;
     margin: 0 !important;
     order: 2;
-    flex: 1 1 0;             /* 弹性占剩余空间, 但可缩 */
+    flex: 1 1 0;
     min-height: 160px;
-    max-height: 260px;
     z-index: 1;
     pointer-events: none;
   }

@@ -1816,6 +1816,14 @@ body.dark .secondary-button {
   .metro-map {
     opacity: 1 !important;
   }
+  /* 手机端: 路线绘制区仅占中段安全区, 避开顶部 scorebar (0-115) + 底部 station-card (>=683).
+     SVG viewBox 用 preserveAspectRatio=xMidYMid meet, 让路线自动填满 366×560 安全区,
+     不再被压成中央小坨 (原容器铺满 390×844 与路线 aspect 1:1.3 严重不匹配). */
+  .metro-map-container {
+    inset: 120px 12px 175px 12px !important;
+    width: auto !important;
+    height: auto !important;
+  }
   .game-chrome {
     position: absolute !important;
     top: 8px !important;

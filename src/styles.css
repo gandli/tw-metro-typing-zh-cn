@@ -1445,10 +1445,16 @@ body.dark .secondary-button {
     transform: none;
   }
   .route-focus-card {
-    top: 68px;
-    min-width: calc(100vw - 32px);
-    padding: 13px 18px;
-    border-radius: 16px;
+    top: 62px;
+    left: 12px !important;
+    right: 12px;
+    min-width: 0 !important;
+    width: auto !important;
+    max-width: none;
+    transform: none !important;
+    padding: 12px 16px !important;
+    border-radius: 14px;
+    z-index: 5;
   }
   .focus-route-title h2 {
     font-size: 21px;
@@ -1456,6 +1462,9 @@ body.dark .secondary-button {
   .map-reset {
     top: 12px;
     left: 12px;
+    z-index: 7;   /* 在 focus-card 之上, 但两者垂直不再重叠 */
+    min-height: 40px;
+    padding: 8px 12px;
   }
   .map-reset kbd {
     display: none;
@@ -1518,6 +1527,15 @@ body.dark .secondary-button {
   .direction-option {
     min-height: 52px;   /* 提高允许 small/b 双行 */
     padding-inline: 10px;
+    min-width: 0;   /* flex child 允许收缩, 避免撑出容器 */
+    overflow: hidden;
+  }
+  .direction-options {
+    /* 两卡等分, 各占一半宽度, 不允许溢出 */
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    min-width: 0;
   }
   .direction-option > span {
     min-width: 0;
@@ -1536,6 +1554,7 @@ body.dark .secondary-button {
     line-height: 1.2;
     text-overflow: ellipsis;
     word-break: break-word;
+    white-space: normal !important;   /* 覆盖 desktop 的 nowrap */
   }
   .direction-option small { font-size: 10px; }
   .direction-option b { font-size: 11px; font-weight: 700; }

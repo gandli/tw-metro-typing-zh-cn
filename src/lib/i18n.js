@@ -123,7 +123,7 @@ const UI_STRINGS = {
     "zh-Hant": "直接輸入畫面上的英文站名",
   },
   // Home 选线 UI
-  station: { en: "站", "zh-Hans": "站", "zh-Hant": "站" },
+  station: { en: "stops", "zh-Hans": "站", "zh-Hant": "站" },
   langLabel: { en: "Language", "zh-Hans": "站名", "zh-Hant": "站名" },
   modeLabel: { en: "Mode", "zh-Hans": "玩法", "zh-Hant": "玩法" },
   modeTimed: { en: "30 s", "zh-Hans": "30 秒", "zh-Hant": "30 秒" },

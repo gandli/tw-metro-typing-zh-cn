@@ -1836,10 +1836,14 @@ body.dark .secondary-button {
     font-weight: 500;
   }
   .station-main h2 {
-    font-size: 28px !important;
-    letter-spacing: -0.035em;
-    line-height: 1.05 !important;
+    /* 双语切换后 h2 可能是长英文名 (Zhongxiao Fuxing 等), 允许换行 + clamp */
+    font-size: clamp(18px, 6vw, 26px) !important;
+    letter-spacing: -0.02em;
+    line-height: 1.15 !important;
     color: #171719;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
   .next-station {
     text-align: right !important;

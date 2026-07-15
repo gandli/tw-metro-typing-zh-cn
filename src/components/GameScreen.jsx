@@ -67,12 +67,17 @@ export function GameScreen({
         </div>
         <div className="station-main">
           <div>
-            <p>NOW ARRIVING</p>
-            <h2>{station.nameZh}</h2>
+            {/* label 标注 h2 显示的是哪种语言, 与 typing-target 语言互补 */}
+            <p>{isChinese ? "ENGLISH" : "中文站名"}</p>
+            {/* 双语同屏: h2 显示"另一种语言"的对照, 与 typing-target 互补不重复
+                中文模式打字时看英文名, 英文模式打字时看中文名 */}
+            <h2>{isChinese ? station.nameEn : station.nameZh}</h2>
           </div>
           <div className={`next-station${next ? "" : " is-terminal"}`}>
             <span>{next ? "下一站" : "终点站"}</span>
-            <strong>{next?.nameZh ?? "本线终点"}</strong>
+            <strong>
+              {next ? (isChinese ? next.nameEn : next.nameZh) : "本线终点"}
+            </strong>
             {next ? (
               <b>
                 <ArrowRight size={22} />

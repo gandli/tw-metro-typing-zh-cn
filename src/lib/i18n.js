@@ -60,8 +60,36 @@ export function isChineseLanguage(language) {
 export function localizeText(text, language) {
   if (!text) return "";
   if (language === TYPING_LANGUAGES.SIMPLIFIED) return toSimplified(text);
-  return text; // 繁体 / 英文档都保留繁体原文
+  if (language === TYPING_LANGUAGES.ENGLISH) {
+    return LINE_NAME_EN[text] ?? OPERATOR_NAME_EN[text] ?? text;
+  }
+  return text;
 }
+
+// 线路名英文 override (数据里没 lineNameEn 字段, 这里 hardcode 官方译名)
+const LINE_NAME_EN = {
+  文湖線: "Wenhu Line",
+  淡水信義線: "Tamsui-Xinyi Line",
+  松山新店線: "Songshan-Xindian Line",
+  中和新蘆線: "Zhonghe-Xinlu Line",
+  板南線: "Bannan Line",
+  環狀線: "Circular Line",
+  淡海輕軌: "Danhai LRT",
+  安坑輕軌: "Ankeng LRT",
+  桃園機場捷運線: "Taoyuan Airport MRT",
+  烏日文心北屯線: "Wuri-Wenxin-Beitun Line",
+  紅線: "Red Line",
+  橘線: "Orange Line",
+  環狀輕軌: "Circular LRT",
+};
+const OPERATOR_NAME_EN = {
+  台北捷運: "Taipei Metro",
+  新北捷運: "New Taipei Metro",
+  桃園捷運: "Taoyuan Metro",
+  台中捷運: "Taichung Metro",
+  高雄捷運: "Kaohsiung Metro",
+  高雄輕軌: "Kaohsiung LRT",
+};
 
 // ---- UI 文案字典 ----
 // key → 三语翻译. 加新词只需在这里加一行. 缺 key 兜底英文档.

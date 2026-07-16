@@ -52,7 +52,7 @@
   <text x="90" y="180" font-family="ui-sans-serif, -apple-system, 'PingFang SC', 'Microsoft YaHei', system-ui"
         font-size="64" font-weight="800" fill="#161619" letter-spacing="-1.5">TAIWAN METRO</text>
   <text x="90" y="235" font-family="ui-sans-serif, -apple-system, 'PingFang SC', system-ui"
-        font-size="42" font-weight="500" fill="#6a665e" letter-spacing="-0.5">TYPING · 站站打字练习</text>
+        font-size="42" font-weight="500" fill="#6a665e" letter-spacing="-0.5">TYPING · 站名打字练习</text>
 
   <!-- Typing target 打字目标条 (project-native motif) -->
   <g transform="translate(700, 210)">

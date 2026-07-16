@@ -11,9 +11,10 @@
 
 <p align="center">
   <a href="./LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-161619?style=flat-square"></a>
-  <img alt="Vite 5" src="https://img.shields.io/badge/Vite-5-646cff?style=flat-square&logo=vite&logoColor=fff">
+  <img alt="Vite 6" src="https://img.shields.io/badge/Vite-6-646cff?style=flat-square&logo=vite&logoColor=fff">
   <img alt="React 18" src="https://img.shields.io/badge/React-18-149eca?style=flat-square&logo=react&logoColor=fff">
   <img alt="Data · TDX" src="https://img.shields.io/badge/Data-TDX-006bff?style=flat-square">
+  <img alt="Conventional Commits" src="https://img.shields.io/badge/Conventional_Commits-1.0.0-fe5196?style=flat-square&logo=conventionalcommits&logoColor=fff">
   <img alt="13 lines · 275 stations" src="https://img.shields.io/badge/13_lines-275_stations-b57a25?style=flat-square">
 </p>
 
@@ -64,7 +65,7 @@ bun run preview
 
 | Layer | Stack |
 |---|---|
-| Runtime | React 18 · Vite 5 |
+| Runtime | React 18 · Vite 6 |
 | Style | 原生 CSS · CSS tokens · WCAG AA/AAA 焦点/对比检验 |
 | Data | TDX Open API · d3-geo · topojson-client |
 | I18n | 内置 en / zh-Hans / zh-Hant · opencc-js 简繁实时转换 |
@@ -94,6 +95,13 @@ bun run data:tdx-files
 - **焦点可见** — 全局 `:focus-visible` 双色环（白内圈 + 蓝外圈 #006bff），暗色主题内圈自动切换
 - **对比度守则** — 所有文本 WCAG AA 4.5:1；徽章边框、分隔线达 1.4.11 非文本 3:1
 - **屏幕阅读器友好** — `aria-live` 通报当前站名与打字目标
+
+## 版本 · Changelog
+
+- 完整历史见 [CHANGELOG.md](./CHANGELOG.md)（[Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 格式）
+- 提交走 [Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/)（`feat:` / `fix:` / `polish:` / `docs:` / `perf:` / `refactor:` / `build:`）
+- 从 v0.3.0 起由 [release-please](https://github.com/googleapis/release-please) 依 commit 类型自动生成，你合并 Release PR 即发版
+
 
 ## 声明
 

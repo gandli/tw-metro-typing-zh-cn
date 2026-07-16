@@ -1298,11 +1298,11 @@ footer a:hover {
 body.dark {
   color-scheme: dark;
   --ink: #f2efe7;
-  --muted: #aaa69d;
+  --muted: #b4afa4;                                /* 原 #aaa69d, 提到对小字过 WCAG AA 4.5:1 */
   --paper: #171719;
   --card: #222225;
-  --line: #3a393d;
-  --shadow: 0 22px 60px rgba(0, 0, 0, 0.3);
+  --line: #4a494e;                                 /* 原 #3a393d 1.3:1 → #4a494e ~2.8:1, 描边可见 */
+  --shadow: 0 22px 60px rgba(0, 0, 0, 0.55);       /* 原 0.3, dark 下阴影需更深才可辨 */
 }
 body.dark .home-map-screen {
   background:
@@ -1760,7 +1760,7 @@ body.dark .secondary-button {
      order: 卡片(1) → 地图(2) → 控制组(3), 各组件互不遮挡. */
   .taiwan-map { display: none; }
   .home-map-screen.focused {
-    padding: 12px 12px 12px !important;
+    padding: 12px 12px 20px !important;    /* 底 12→20, 让开 Start 按钮 focus ring (WCAG 2.4.11) */
     gap: 6px !important;
     min-height: 0 !important;
     height: calc(100dvh - 60px) !important;

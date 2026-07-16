@@ -1323,6 +1323,12 @@ body.dark .route-button,
 body.dark .map-reset {
   background: rgba(34, 34, 37, 0.94);
 }
+/* dark 徽章: 白底 → 深灰底, 保留彩字彩环. 融入深色主题避免过亮扎眼. */
+body.dark .focus-line-code,
+body.dark .route-symbol {
+  background: #2a2a2e;
+  color: color-mix(in srgb, var(--focus-color) 88%, white 12%);   /* 略提亮饱和色, 暗底更清晰 */
+}
 body.dark .game {
   --map-route-color: color-mix(in srgb, var(--active-route) 84%, white);
   --map-casing: rgba(8, 8, 10, 0.92);
@@ -1847,8 +1853,20 @@ body.dark .secondary-button {
     transform: none !important;
   }
   .home-copy .eyebrow { font-size: 11px; }
-  .home-copy h1 { font-size: 26px !important; line-height: 1.2; margin: 8px 0 !important; }
-  .home-copy .lede { font-size: 14px !important; line-height: 1.5; }
+  .home-copy h1 {
+    font-size: 26px !important;
+    line-height: 1.28 !important;              /* CJK 需要更宽松的行高避免顶天立地 */
+    margin: 8px 0 !important;
+    text-wrap: balance;                        /* 均衡多行长度 */
+    hanging-punctuation: allow-end;            /* 中文逗号句号挂在行末不占位 */
+    word-break: normal;                        /* 避免中文单字换行 */
+    overflow-wrap: normal;
+  }
+  .home-copy .lede {
+    font-size: 14px !important;
+    line-height: 1.65 !important;              /* body CJK 更透气 */
+    text-wrap: pretty;                         /* 减少孤字/孤词 */
+  }
   .home-instruction { display: none; }
   /* focused 状态 (选路线后):
      - home-copy 直接隐藏

@@ -262,16 +262,19 @@ main {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: var(--accent-dark);
+  /* Eyebrow: 事实型 tagline (真实路线, 真实站点). 保留但去营销色带装饰,
+     product register 里工具型 kicker 不需要贴牌感. */
+  color: var(--muted);
   font:
-    700 12px "DM Mono",
+    500 12px "DM Mono",
     monospace;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
 }
 .eyebrow span {
-  width: 38px;
-  height: 3px;
-  background: var(--accent);
+  /* 从 3px accent 色带 → 1px line 短横, 视觉降级为分隔而非强调 */
+  width: 20px;
+  height: 1px;
+  background: var(--line);
 }
 /* 语言 cycle 按钮: 文本标签 (EN / 简 / 繁), 与 icon-button 尺寸对齐 */
 .icon-button.lang-cycle {
@@ -294,7 +297,9 @@ h1 {
   font-weight: 900;
 }
 h1 em {
-  color: var(--accent);
+  /* 单色 headline: em 语义强调用 font-style italic 或 font-weight, 不用色区分.
+     product register 里工具型 hero 不需要双色/gradient text. */
+  color: inherit;
   font-style: normal;
 }
 .lede {
@@ -456,7 +461,9 @@ kbd {
   gap: 10px;
   padding: 10px 12px;
   text-align: left;
-  border: 1px solid color-mix(in srgb, var(--route) 38%, var(--line));
+  /* 默认卡: 纯中性边 (不引入 route 色, 避免像 error/focus 态).
+     交互三态解耦: default (line) → hover (route 40%) → selected (route 满色) */
+  border: 1px solid var(--line);
   border-radius: 15px;
   background: rgba(255, 253, 248, 0.92);
   box-shadow: 0 9px 26px rgba(44, 39, 28, 0.08);
@@ -464,7 +471,7 @@ kbd {
   transition: 0.18s ease;
 }
 .route-button:hover {
-  border-color: var(--route);
+  border-color: color-mix(in srgb, var(--route) 60%, var(--line));
   transform: translateY(-2px);
 }
 .route-button.selected {

@@ -164,7 +164,7 @@ const UI_STRINGS = {
   },
   heroDesc: {
     en: "Pick a route on the real Taiwan map and type each station name in English or Chinese along the actual line. Each correct character moves the train one hop.",
-    "zh-Hans": "在真实台湾地图上选择路线，沿著精确站点位置完成英文或中文站名。每打对一个字，列车就会往下一站前进一段。",
+    "zh-Hans": "在真实台湾地图上选择路线，沿着精确站点位置完成英文或中文站名。每打对一个字，列车就会往下一站前进一段。",
     "zh-Hant": "在真實台灣地圖上選擇路線，沿著精確站點位置完成英文或中文站名。每打對一個字，列車就會往下一站前進一段。",
   },
   // Home eyebrow: 事实型 tagline, 强调真实站点数据 (非 SaaS 模板 kicker)

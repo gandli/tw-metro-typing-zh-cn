@@ -1760,7 +1760,7 @@ body.dark .secondary-button {
      order: 卡片(1) → 地图(2) → 控制组(3), 各组件互不遮挡. */
   .taiwan-map { display: none; }
   .home-map-screen.focused {
-    padding: 12px 12px 12px !important;
+    padding: 12px 12px 20px !important;    /* 底 12→20, 让开 Start 按钮 focus ring (WCAG 2.4.11) */
     gap: 6px !important;
     min-height: 0 !important;
     height: calc(100dvh - 60px) !important;

@@ -607,9 +607,10 @@ kbd {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 5px;
+  justify-content: space-between;       /* 箭头固定靠右, 不受站名长度影响 */
+  width: 100%;
   overflow: hidden;
-  font-size: 13px;
+  font-size: clamp(10px, 3.5vw, 13px);  /* 超长站名 (忠孝复兴) 自动缩, 不换行不溢出 */
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -1968,6 +1969,9 @@ body.dark .secondary-button {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(0,0,0,0.06) !important;
     box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    /* 与 route-pill 保持基线对齐: 统一 min-height + border-radius + flex-align */
+    display: inline-flex;
+    align-items: center;
   }
   .back-button kbd { display: none; }
   .route-pill {
@@ -2088,6 +2092,14 @@ body.dark .secondary-button {
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     font-size: 11px !important;
+  }
+  .station-meta sup {
+    /* "01/24" 中的 /24 弱化, 表示总站数上下文 */
+    font-size: 8px;
+    font-weight: 400;
+    color: var(--muted);
+    margin-left: 1px;
+    top: -1px;
   }
   .station-meta span:last-child {
     color: #7d7d7d !important;

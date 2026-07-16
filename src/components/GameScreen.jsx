@@ -92,7 +92,7 @@ export function GameScreen({
         onClick={onFocusTyping}
       >
         <div className="station-meta">
-          <span>{String(stationIndex + 1).padStart(2, "0")}</span>
+          <span>{String(stationIndex + 1).padStart(2, "0")}<sup>/{stations.length}</sup></span>
           <span title={station.address}>{station.address}</span>
         </div>
         <div className="station-main">

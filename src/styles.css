@@ -1854,19 +1854,17 @@ body.dark .secondary-button {
   }
   .home-copy .eyebrow { font-size: 11px; }
   .home-copy h1 {
-    font-size: 26px !important;
-    line-height: 1.28 !important;              /* CJK 需要更宽松的行高避免顶天立地 */
-    margin: 8px 0 !important;
-    text-wrap: balance;                        /* 均衡多行长度 */
-    hanging-punctuation: allow-end;            /* 中文逗号句号挂在行末不占位 */
-    word-break: normal;                        /* 避免中文单字换行 */
+    font-size: 24px !important;                /* 26→24 收 */
+    line-height: 1.28 !important;
+    margin: 6px 0 !important;
+    text-wrap: balance;
+    hanging-punctuation: allow-end;
+    word-break: normal;
     overflow-wrap: normal;
   }
-  .home-copy .lede {
-    font-size: 14px !important;
-    line-height: 1.65 !important;              /* body CJK 更透气 */
-    text-wrap: pretty;                         /* 减少孤字/孤词 */
-  }
+  /* 手机首屏 hero 瘦身: 段落隐藏, 让路线卡片挤上首屏.
+     lede 内容在 focused 状态本就不显示; 未选路线时用户直接看卡片列表最有效. */
+  .home-copy .lede { display: none !important; }
   .home-instruction { display: none; }
   /* focused 状态 (选路线后):
      - home-copy 直接隐藏

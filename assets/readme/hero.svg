@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-labelledby="hero-title hero-desc">
+  <title id="hero-title">TAIWAN METRO TYPING</title>
+  <desc id="hero-desc">以台湾捷运真实站点为题的打字练习工具，图案显示文湖线路径与打字目标游标。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f5f1e8"/>
+      <stop offset="1" stop-color="#ece7dc"/>
+    </linearGradient>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0 L0 0 0 24" fill="none" stroke="#d9d4ca" stroke-width="0.5" opacity="0.55"/>
+    </pattern>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="1.2"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas -->
+  <rect width="1200" height="360" fill="url(#bg)"/>
+  <rect width="1200" height="360" fill="url(#grid)"/>
+
+  <!-- Wenhu Line 文湖线路径 (BR 棕色, 引用真实地理弯道感) -->
+  <g stroke="#b57a25" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M 90 260 C 180 260, 240 220, 320 200 S 460 170, 540 140 S 700 110, 820 130 S 980 170, 1120 130"
+          stroke-width="10" opacity="0.18" filter="url(#soft)"/>
+    <path d="M 90 260 C 180 260, 240 220, 320 200 S 460 170, 540 140 S 700 110, 820 130 S 980 170, 1120 130"
+          stroke-width="4"/>
+  </g>
+  <!-- Stations 站点 -->
+  <g fill="#fffdf8" stroke="#b57a25" stroke-width="2.5">
+    <circle cx="90" cy="260" r="6"/>
+    <circle cx="240" cy="220" r="5"/>
+    <circle cx="380" cy="188" r="5"/>
+    <circle cx="540" cy="140" r="5"/>
+    <circle cx="700" cy="120" r="5"/>
+    <circle cx="820" cy="130" r="5"/>
+    <circle cx="980" cy="170" r="5"/>
+    <circle cx="1120" cy="130" r="6"/>
+  </g>
+
+  <!-- BR badge 徽章 -->
+  <g transform="translate(90, 60)">
+    <circle cx="26" cy="26" r="24" fill="#fffdf8" stroke="#b57a25" stroke-width="4"/>
+    <text x="26" y="33" font-family="ui-monospace, SFMono-Regular, 'DM Mono', monospace"
+          font-size="16" font-weight="700" fill="#b57a25" text-anchor="middle">BR</text>
+  </g>
+  <text x="140" y="55" font-family="ui-monospace, monospace" font-size="11"
+        fill="#74716c" letter-spacing="1.4">WENHU LINE · 文湖線</text>
+  <text x="140" y="76" font-family="ui-monospace, monospace" font-size="9"
+        fill="#74716c" letter-spacing="1.2">24 STATIONS · TAIPEI METRO</text>
+
+  <!-- Title 主标 -->
+  <text x="90" y="180" font-family="ui-sans-serif, -apple-system, 'PingFang SC', 'Microsoft YaHei', system-ui"
+        font-size="64" font-weight="800" fill="#161619" letter-spacing="-1.5">TAIWAN METRO</text>
+  <text x="90" y="235" font-family="ui-sans-serif, -apple-system, 'PingFang SC', system-ui"
+        font-size="42" font-weight="500" fill="#6a665e" letter-spacing="-0.5">TYPING · 站站打字练习</text>
+
+  <!-- Typing target 打字目标条 (project-native motif) -->
+  <g transform="translate(700, 210)">
+    <rect x="0" y="0" width="420" height="70" rx="14" fill="#fffdf8" stroke="#d9d4ca" stroke-width="1"/>
+    <text x="20" y="30" font-family="ui-monospace, monospace" font-size="9"
+          fill="#74716c" letter-spacing="1.2">NOW TYPING</text>
+    <!-- Typed chars (dark) -->
+    <text x="20" y="58" font-family="ui-sans-serif, system-ui" font-size="24" font-weight="600" fill="#161619">tai</text>
+    <!-- Current char (brand + underline cursor) -->
+    <text x="65" y="58" font-family="ui-sans-serif, system-ui" font-size="24" font-weight="600" fill="#b57a25">p</text>
+    <rect x="65" y="61" width="16" height="2" fill="#b57a25">
+      <animate attributeName="opacity" values="1;0;1" dur="1.4s" repeatCount="indefinite"/>
+    </rect>
+    <!-- Untyped chars (muted) -->
+    <text x="82" y="58" font-family="ui-sans-serif, system-ui" font-size="24" font-weight="600" fill="#6a665e">ei zoo</text>
+    <!-- Progress counter -->
+    <text x="400" y="26" font-family="ui-monospace, monospace" font-size="11"
+          fill="#74716c" text-anchor="end" letter-spacing="0.8">01<tspan font-size="8" fill="#aaa69d">/24</tspan></text>
+  </g>
+
+  <!-- Meta corner -->
+  <text x="1110" y="335" font-family="ui-monospace, monospace" font-size="10"
+        fill="#74716c" text-anchor="end" letter-spacing="1.4">13 LINES · 275 STATIONS · REAL WGS84</text>
+</svg>

@@ -99,6 +99,14 @@ bun run data:tdx-files
 
 本专案不是任何一家捷运公司的官方服务，仅供打字练习使用。所有站点资讯来自 TDX 开放资料。
 
+## 灵感来源
+
+一条 X 上传起来的 idea：
+
+- 🇯🇵 **[@densyatyping](https://x.com/densyatyping)** ([tweet](https://x.com/densyatyping/status/2076643513903861948)) — 日本原创，把日本铁路线做成打字练习网站：「タイピングで電車移動をするサイトを作りました！」
+- 🇹🇼 **[@ridemountainpig · Yen Cheng Lin](https://x.com/ridemountainpig)** ([tweet](https://x.com/ridemountainpig/status/2076661243423911975)) — 看到日本版后觉得台湾捷运也适合，花一天做了台湾版：*"A few days ago I found @densyatyping, a Japanese typing game that turns train lines into typing practice. I loved the idea and thought Taiwan's metro system would be a perfect fit."*
+- 🇨🇳 **本仓库** — 在台湾版基础上做简体中文本地化 + impeccable UI/无障碍打磨 + 数据层展示层解耦（源 JSON 保繁体、`opencc-js` 浏览器端实时简繁转换）。
+
 ---
 
 <p align="center">

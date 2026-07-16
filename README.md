@@ -50,14 +50,14 @@
 ## 首次运行
 
 ```bash
-# 依赖用 pnpm 或 bun 均可
-pnpm install
-pnpm dev
+# 使用 bun (Node 18+)
+bun install
+bun run dev
 # → http://127.0.0.1:5173
 
 # 生产建置
-pnpm build
-pnpm preview
+bun run build
+bun run preview
 ```
 
 ## 技术
@@ -68,7 +68,7 @@ pnpm preview
 | Style | 原生 CSS · CSS tokens · WCAG AA/AAA 焦点/对比检验 |
 | Data | TDX Open API · d3-geo · topojson-client |
 | I18n | 内置 en / zh-Hans / zh-Hant · opencc-js 简繁实时转换 |
-| Test | node --test · Playwright E2E (`pnpm test` · `pnpm e2e`) |
+| Test | node --test · Playwright E2E (`bun run test` · `bun run e2e`) |
 
 ## 数据
 
@@ -79,10 +79,10 @@ pnpm preview
 
 ```bash
 # 重新下载台湾行政区边界
-pnpm data:map
+bun run data:map
 
 # 汇入 TDX 手动下载的 JSON (放入 data/ 目录)
-pnpm data:tdx-files
+bun run data:tdx-files
 ```
 
 档名格式：`<operator>-line.json`、`<operator>-station.json`、`<operator>-station-of-line.json`（如 `trtc-line.json`）。

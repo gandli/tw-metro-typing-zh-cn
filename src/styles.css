@@ -420,6 +420,9 @@ kbd {
   font:
     700 11px "DM Mono",
     monospace;
+  font-variant-numeric: tabular-nums;   /* 数字等宽, 与字母混排稳定 */
+  letter-spacing: 0;                    /* 双字母 BR/BL 也居中: 靠 grid place-items 而非字距 */
+  text-align: center;
 }
 .focus-line-code {
   width: 42px;

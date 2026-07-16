@@ -104,7 +104,9 @@ const UI_STRINGS = {
   terminal: { en: "TERMINAL", "zh-Hans": "终点站", "zh-Hant": "終點站" },
   routeEnd: { en: "End of Line", "zh-Hans": "本线终点", "zh-Hant": "本線終點" },
   stations: { en: "stops", "zh-Hans": "站", "zh-Hant": "站" },
-  // 打字对照 label (h2 对面的语言标签)
+  // 打字对照 label. 命名按"目标语言"(对面语言), 不是"当前语言".
+  // labelEn = 对面是英文时用的 label (当前中文档 → 显示英文站名 label)
+  // labelZh = 对面是中文时用的 label (当前英文档 → 显示中文站名 label)
   labelEn: { en: "CHINESE", "zh-Hans": "ENGLISH", "zh-Hant": "ENGLISH" },
   labelZh: { en: "中文站名", "zh-Hans": "英文名", "zh-Hant": "英文名" },
   // scorebar
@@ -124,7 +126,7 @@ const UI_STRINGS = {
   },
   // Home 选线 UI
   station: { en: "stops", "zh-Hans": "站", "zh-Hant": "站" },
-  langLabel: { en: "Language", "zh-Hans": "站名", "zh-Hant": "站名" },
+  langLabel: { en: "Station name", "zh-Hans": "站名", "zh-Hant": "站名" },
   modeLabel: { en: "Mode", "zh-Hans": "玩法", "zh-Hant": "玩法" },
   modeTimed: { en: "30 s", "zh-Hans": "30 秒", "zh-Hant": "30 秒" },
   modeLine: { en: "Full Line", "zh-Hans": "全线", "zh-Hant": "全線" },
@@ -137,8 +139,8 @@ const UI_STRINGS = {
   recenter: { en: "Recenter", "zh-Hans": "归位", "zh-Hant": "歸位" },
   mapA11y: {
     en: "Route map. Drag to pan, pinch to zoom, double tap to reset.",
-    "zh-Hans": "路线图, 单指拖动, 双指缩放, 双击归位",
-    "zh-Hant": "路線圖, 單指拖動, 雙指縮放, 雙擊歸位",
+    "zh-Hans": "路线图，单指拖动，双指缩放，双击归位。",
+    "zh-Hant": "路線圖，單指拖動，雙指縮放，雙擊歸位。",
   },
   // SR
   nowArriving: {
@@ -154,8 +156,8 @@ const UI_STRINGS = {
   // Home 顶部介绍 / 状态
   heroLine1: {
     en: "Station by station. ",
-    "zh-Hans": "一站一站，",
-    "zh-Hant": "一站一站，",
+    "zh-Hans": "一站接一站，",
+    "zh-Hant": "一站接一站，",
   },
   heroLine2: {
     en: "Type your way through.",
@@ -164,14 +166,14 @@ const UI_STRINGS = {
   },
   heroDesc: {
     en: "Pick a route on the real Taiwan map and type each station name in English or Chinese along the actual line. Each correct character moves the train one hop.",
-    "zh-Hans": "在真实台湾地图上选择路线，沿着精确站点位置完成英文或中文站名。每打对一个字，列车就会往下一站前进一段。",
-    "zh-Hant": "在真實台灣地圖上選擇路線，沿著精確站點位置完成英文或中文站名。每打對一個字，列車就會往下一站前進一段。",
+    "zh-Hans": "在真实台湾地图上选一条捷运线路，用英文或中文打完每一站的名字。每打对一个字，列车就往下一站前进一段。",
+    "zh-Hant": "在真實台灣地圖上選一條捷運路線，用英文或中文打完每一站的名字。每打對一個字，列車就往下一站前進一段。",
   },
-  // Home eyebrow: 事实型 tagline, 强调真实站点数据 (非 SaaS 模板 kicker)
+  // Home eyebrow: 事实型 tagline. 用具体数字压过"真实"这类形容词, 也和 heroDesc 的"真实台湾地图"错开
   homeEyebrow: {
-    en: "Real routes, real stations",
-    "zh-Hans": "真实路线，真实站点",
-    "zh-Hant": "真實路線，真實站點",
+    en: "13 lines · 275 stations · TDX data",
+    "zh-Hans": "13 条线路 · 275 站 · TDX 官方数据",
+    "zh-Hant": "13 條路線 · 275 站 · TDX 官方資料",
   },
   // Focus 卡片头部: 已选择的路线
   selectedRouteLabel: {
@@ -192,8 +194,8 @@ const UI_STRINGS = {
   },
   resultSummary: {
     en: "You passed {completed} stations in {elapsed} seconds.",
-    "zh-Hans": "你在 {elapsed} 秒内通过了 {completed} 个车站。",
-    "zh-Hant": "你在 {elapsed} 秒內通過了 {completed} 個車站。",
+    "zh-Hans": "你用 {elapsed} 秒跑完 {completed} 站。",
+    "zh-Hant": "你用 {elapsed} 秒跑完 {completed} 站。",
   },
   resultStationsLabel: {
     en: "Stations cleared",
